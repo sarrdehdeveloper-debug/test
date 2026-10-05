@@ -1,26 +1,421 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ==========================================================================
+   Zodiac Blend design tokens (Tailwind v4, CSS-first).
+   Brand colours come from the logo. Utilities: bg-night, text-gold-light, font-display, ...
+   ========================================================================== */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  /* Brand */
+  --color-gold: #a46f26;
+  --color-gold-bright: #c78933;
+  --color-gold-light: #e9c77b;
+  --color-gold-pale: #f6e7c4;
+  /* Darker gold for SMALL text on light surfaces (6.2:1 on ivory). */
+  --color-gold-deep: #7e5418;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-night: #0e1726;
+  --color-night-2: #16223a;
+  --color-night-3: #22314f;
+  --color-night-deep: #0a111d;
+
+  --color-ivory: #fbf7ef;
+  --color-parchment: #f3ebdd;
+  --color-ink: #1f2430;
+  --color-ink-soft: #4a5060;
+  --color-mist: #c4cbd9;
+
+  /* Feedback */
+  --color-danger: #b3261e;
+  --color-danger-soft: #fbe9e7;
+  --color-danger-light: #ffb4ab;
+  --color-success: #2e6b4a;
+  --color-success-soft: #e6f2ea;
+  --color-warning: #85540b;
+  --color-warning-soft: #fbf0d9;
+  --color-info: #1f4e79;
+  --color-info-soft: #e5eef7;
+
+  /* Typography — Latin defaults; Arabic overrides below. */
+  --font-display: "Cinzel", "Amiri", Georgia, serif;
+  --font-serif: "Cormorant Garamond", "Amiri", Georgia, "Times New Roman", serif;
+  --font-sans:
+    "Inter Variable", "Noto Naskh Arabic Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-cjk:
+    "Noto Serif CJK TC", "Noto Serif TC", "Songti TC", "Songti SC", "STSong", "SimSun", "PMingLiU",
+    "Noto Sans CJK TC", serif;
+  --font-symbol:
+    "Segoe UI Symbol", "Apple Symbols", "Noto Sans Symbols", "Noto Sans Symbols 2", "DejaVu Sans",
+    sans-serif;
+
+  --tracking-display: 0.16em;
+  --tracking-wordmark: 0.12em;
+
+  --shadow-card: 0 1px 2px rgb(31 36 48 / 0.04), 0 12px 32px -16px rgb(31 36 48 / 0.22);
+  --shadow-lift: 0 2px 4px rgb(31 36 48 / 0.06), 0 22px 44px -18px rgb(31 36 48 / 0.32);
+  --shadow-glow: 0 0 0 1px rgb(233 199 123 / 0.25), 0 18px 48px -12px rgb(199 137 51 / 0.45);
+
+  --animate-twinkle: twinkle 5s ease-in-out infinite;
+  --animate-orbit: orbit 240s linear infinite;
+  --animate-orbit-reverse: orbit-reverse 320s linear infinite;
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes orbit-reverse {
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* --------------------------------------------------------------------------
+   Surface tones. <Section tone="night"> (or any element with data-tone) sets
+   these variables; components use the semantic utilities below so they read
+   correctly on both light and dark surfaces:
+     text-fg  text-muted  text-accent  bg-surface  bg-card  border-line  text-ornament
+   -------------------------------------------------------------------------- */
+@theme inline {
+  --color-fg: var(--tone-fg);
+  --color-muted: var(--tone-muted);
+  --color-accent: var(--tone-accent);
+  --color-surface: var(--tone-surface);
+  --color-card: var(--tone-card);
+  --color-line: var(--tone-line);
+  --color-ornament: var(--tone-ornament);
+}
+
+:root,
+[data-tone="ivory"] {
+  --tone-surface: var(--color-ivory);
+  --tone-fg: var(--color-ink);
+  --tone-muted: var(--color-ink-soft);
+  --tone-accent: var(--color-gold-deep);
+  --tone-card: #ffffff;
+  --tone-line: rgb(164 111 38 / 0.28);
+  --tone-ornament: var(--color-gold);
+  --tone-focus: var(--color-gold-deep);
+}
+
+[data-tone="parchment"] {
+  --tone-surface: var(--color-parchment);
+  --tone-fg: var(--color-ink);
+  --tone-muted: var(--color-ink-soft);
+  --tone-accent: var(--color-gold-deep);
+  --tone-card: var(--color-ivory);
+  --tone-line: rgb(164 111 38 / 0.32);
+  --tone-ornament: var(--color-gold);
+  --tone-focus: var(--color-gold-deep);
+}
+
+[data-tone="night"] {
+  --tone-surface: var(--color-night);
+  --tone-fg: var(--color-ivory);
+  --tone-muted: var(--color-mist);
+  --tone-accent: var(--color-gold-light);
+  --tone-card: var(--color-night-2);
+  --tone-line: rgb(233 199 123 / 0.22);
+  --tone-ornament: var(--color-gold-bright);
+  --tone-focus: var(--color-gold-light);
+}
+
+[data-tone] {
+  color: var(--tone-fg);
+}
+
+/* --------------------------------------------------------------------------
+   Arabic: Amiri for headings/display, Noto Naskh Arabic for body text.
+   Letter-spacing is removed: it breaks Arabic letter joining.
+   -------------------------------------------------------------------------- */
+:root:lang(ar) {
+  --font-display: "Amiri", "Noto Naskh Arabic Variable", Georgia, serif;
+  --font-serif: "Amiri", "Noto Naskh Arabic Variable", Georgia, serif;
+  --font-sans:
+    "Noto Naskh Arabic Variable", "Inter Variable", ui-sans-serif, system-ui, "Segoe UI", Tahoma,
+    sans-serif;
+  --tracking-display: 0;
+}
+
+/* Latin fragments inside Arabic pages (wordmark, codes) keep the Latin fonts. */
+:root:lang(ar) [lang="en"] {
+  --font-display: "Cinzel", Georgia, serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --tracking-display: 0.16em;
+}
+
+/* -------------------------------------------------------------------------- base */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    color-scheme: light;
+    scroll-padding-top: 5.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "kern", "liga", "calt";
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  :lang(ar) body,
+  body:lang(ar) {
+    line-height: 1.85;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: rgb(233 199 123 / 0.5);
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--tone-focus);
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+  }
+
+  summary {
+    cursor: pointer;
+  }
+
+  /* Native date/time pickers: calendar icon tinted gold. */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+    filter: sepia(1) saturate(3) hue-rotate(-12deg);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- utilities */
+
+/* Brand gold gradient (logo): #E9C77B -> #C78933 -> #A46F26 */
+@utility bg-gold-gradient {
+  background-image: linear-gradient(135deg, #e9c77b 0%, #c78933 52%, #a46f26 100%);
+}
+
+/* Lighter variant used behind dark button text (keeps >= 4.5:1 contrast with night). */
+@utility bg-gold-soft-gradient {
+  background-image: linear-gradient(135deg, #f1d696 0%, #e2b866 45%, #c78933 100%);
+}
+
+@utility text-gold-gradient {
+  background-image: linear-gradient(135deg, #f1d696 0%, #e9c77b 30%, #c78933 70%, #a46f26 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Thin gold hairline that fades out at both ends. */
+@utility rule-gold {
+  height: 1px;
+  border: 0;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(199 137 51 / 0.65) 20%,
+    #e9c77b 50%,
+    rgb(199 137 51 / 0.65) 80%,
+    transparent 100%
+  );
+}
+
+/* Small caps label above headings. */
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--tone-accent);
+
+  &:lang(ar) {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+}
+
+/* Soft celestial glow behind dark hero sections. */
+@utility bg-night-sky {
+  background-color: var(--color-night);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(199 137 51 / 0.22), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgb(64 92 150 / 0.28), transparent 65%),
+    radial-gradient(ellipse 50% 40% at 0% 80%, rgb(233 199 123 / 0.08), transparent 70%),
+    linear-gradient(180deg, var(--color-night) 0%, var(--color-night-2) 100%);
+}
+
+/* Gold gradient border on a card: needs a background on the element itself. */
+@utility border-gold-gradient {
+  border: 1px solid transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* -------------------------------------------------------------------------- components */
+@layer components {
+  /* Rich text from the API (blog posts, legal pages, readings): <div className="prose-zb" />. */
+  .prose-zb {
+    color: var(--tone-fg);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+  .prose-zb > * + * {
+    margin-top: 1.1em;
+  }
+  .prose-zb h2,
+  .prose-zb h3,
+  .prose-zb h4 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--tone-fg);
+    margin-top: 1.8em;
+  }
+  .prose-zb h2 {
+    font-size: 1.75rem;
+  }
+  .prose-zb h3 {
+    font-size: 1.4rem;
+  }
+  .prose-zb h4 {
+    font-size: 1.15rem;
+  }
+  .prose-zb a {
+    color: var(--tone-accent);
+    text-decoration: underline;
+    text-decoration-color: rgb(199 137 51 / 0.6);
+    text-underline-offset: 3px;
+  }
+  .prose-zb a:hover {
+    text-decoration-color: currentColor;
+  }
+  .prose-zb strong {
+    font-weight: 650;
+  }
+  .prose-zb ul,
+  .prose-zb ol {
+    padding-inline-start: 1.4em;
+  }
+  .prose-zb ul {
+    list-style: none;
+  }
+  .prose-zb ul > li {
+    position: relative;
+  }
+  .prose-zb ul > li::before {
+    content: "✦";
+    position: absolute;
+    inset-inline-start: -1.25em;
+    top: 0.05em;
+    font-size: 0.75em;
+    color: var(--tone-ornament);
+  }
+  .prose-zb ol {
+    list-style: decimal;
+  }
+  .prose-zb li + li {
+    margin-top: 0.4em;
+  }
+  .prose-zb blockquote {
+    border-inline-start: 2px solid var(--tone-ornament);
+    padding-inline-start: 1.1em;
+    font-family: var(--font-serif);
+    font-size: 1.25em;
+    font-style: italic;
+    color: var(--tone-muted);
+  }
+  .prose-zb hr {
+    border: 0;
+    height: 1px;
+    background: var(--tone-line);
+    margin-block: 2em;
+  }
+  .prose-zb img {
+    border-radius: 0.75rem;
+    max-width: 100%;
+    height: auto;
+  }
+  .prose-zb table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+  }
+  .prose-zb th,
+  .prose-zb td {
+    border-bottom: 1px solid var(--tone-line);
+    padding: 0.5em 0.75em;
+    text-align: start;
+  }
+  .prose-zb code {
+    font-size: 0.9em;
+    background: rgb(164 111 38 / 0.1);
+    border-radius: 0.25rem;
+    padding: 0.1em 0.35em;
+  }
+}
+
+/* -------------------------------------------------------------------------- motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

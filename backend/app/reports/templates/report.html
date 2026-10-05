@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="{{ view.locale }}" dir="{{ view.direction }}">
+<head>
+<meta charset="utf-8">
+<title>{{ view.text.report_title }}</title>
+<style>
+{{ font_css }}
+{{ stylesheet }}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-inner">
+    {# Wrapped: Chromium ignores the named page (full-bleed cover) when a page starts with a bare <img>. #}
+    <div class="logo-wrap"><img class="cover-logo" src="{{ logo_uri }}" alt="Zodiac Blend"></div>
+    <h1 class="cover-title">{{ view.text.report_title }}</h1>
+    {% if view.name %}
+    <p class="cover-name">
+      <span class="prepared">{{ view.text.prepared_for }}</span>
+      <span class="name">{{ view.name }}</span>
+    </p>
+    {% endif %}
+
+    <div class="glance">
+      <h2 class="glance-title">{{ view.text.chart_at_a_glance }}</h2>
+      <div class="ornament light"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
+      <div class="glance-grid">
+        <div class="glance-col">
+          <h3>{{ view.text.western_heading }}</h3>
+          {% for p in view.placements %}
+          <div class="glance-row">
+            <span class="glance-label">{{ p.label }}</span>
+            <span class="glance-value">{{ p.sign }}<span class="glance-degree"><bdi class="num">{{ p.degree }}</bdi></span></span>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="glance-col">
+          <h3>{{ view.text.chinese_heading }}</h3>
+          {% for pillar in view.pillars %}
+          <div class="glance-row">
+            <span class="glance-label">{{ pillar.label }}</span>
+            <span class="glance-pillar">
+              <span class="glance-chars han" lang="zh-Hans">{{ pillar.characters }}</span>
+              <span>
+                <span class="glance-desc">{{ pillar.description }}</span>
+                <span class="glance-pinyin" lang="zh-Latn-pinyin" dir="ltr">{{ pillar.pinyin }}</span>
+              </span>
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <p class="glance-notes">
+        <strong>{{ view.text.day_master }}:</strong> {{ view.day_master }}
+        {% for note in view.notes %}<span class="sep">·</span>{{ note }}{% endfor %}
+      </p>
+    </div>
+
+    <p class="cover-date">{{ view.generated_on }}</p>
+  </div>
+</section>
+
+{% for section in view.sections %}
+<section class="chapter">
+  <header class="chapter-head">
+    <p class="chapter-eyebrow">{{ section.label }}</p>
+    <h2 class="chapter-title">{{ section.title }}</h2>
+    <div class="ornament"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
+  </header>
+  {# section.html comes from app.markdown.render_markdown: raw HTML disabled + nh3-sanitised. #}
+  <div class="prose">{{ section.html | safe }}</div>
+</section>
+{% endfor %}
+
+<section class="cover back">
+  <div class="cover-inner">
+    <div class="logo-wrap"><img class="back-logo" src="{{ logo_uri }}" alt="Zodiac Blend"></div>
+    <h2 class="back-title">{{ view.text.closing_title }}</h2>
+    <div class="ornament light"><span class="line"></span><span class="diamond"></span><span class="line"></span></div>
+    <div class="back-text">
+      <p>{{ view.text.disclaimer }}</p>
+      <p class="small">{{ view.text.ai_note }}</p>
+      <p class="small">{{ view.text.privacy_note }}</p>
+    </div>
+    <p class="back-thanks">{{ view.text.thank_you }}</p>
+    <div class="back-contact">
+      <h3>{{ view.text.contact_heading }}</h3>
+      <p dir="ltr">{{ website }}<span class="sep">·</span>{{ contact_email }}</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{{ greeting }}
+
+{{ t.email_intro }}
+
+{{ t.email_cta }}:
+{{ download_url }}
+
+{{ expiry_sentence }}
+{{ t.email_after_expiry }}
+{% if attached %}
+
+{{ t.email_attachment_note }}
+{% endif %}
+
+{{ t.email_not_you }}
+
+{{ t.email_signoff }}
+{{ t.email_team }}
+
+--
+Zodiac Blend · {{ website }} · {{ contact_email }}
+{{ t.tagline }}

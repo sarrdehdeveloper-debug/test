@@ -1,0 +1,407 @@
+{
+  "meta": {
+    "siteName": "Zodiac Blend",
+    "slogan": "Two Traditions. One Truth.",
+    "description": "Western astrology and the Chinese zodiac, blended into one reading."
+  },
+  "nav": {
+    "home": "Home",
+    "free": "Free reading",
+    "reading": "Full report",
+    "offers": "Offers",
+    "library": "Galaxy Library",
+    "blog": "Blog",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "main": "Main navigation",
+    "footer": "Footer navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "skipToContent": "Skip to content",
+    "language": "Language",
+    "cta": "Get your report",
+    "homeLink": "Zodiac Blend, home"
+  },
+  "footer": {
+    "explore": "Explore",
+    "company": "Company",
+    "legal": "Legal",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "rights": "© {year} {company}. All rights reserved."
+  },
+  "common": {
+    "getFreeReading": "Get your free reading",
+    "getFullReport": "Get the full report",
+    "learnMore": "Learn more",
+    "readMore": "Read more",
+    "viewAll": "View all",
+    "backHome": "Back to home",
+    "back": "Back",
+    "tryAgain": "Try again",
+    "continue": "Continue",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied",
+    "download": "Download",
+    "loading": "Loading…",
+    "dismiss": "Dismiss",
+    "next": "Next",
+    "previous": "Previous",
+    "free": "Free",
+    "oneTime": "One-time payment",
+    "or": "or",
+    "opensInNewTab": "(opens in a new tab)"
+  },
+  "form": {
+    "labels": {
+      "email": "Email address",
+      "displayName": "Your name",
+      "birthDate": "Date of birth",
+      "birthTime": "Time of birth",
+      "birthCountry": "Country of birth",
+      "birthCity": "City of birth",
+      "discountCode": "Discount code",
+      "language": "Language of your reading",
+      "marketingOptIn": "Send me occasional news and offers. You can unsubscribe at any time.",
+      "acceptTerms": "I accept the <terms>Terms of Service</terms> and the <privacy>Privacy Policy</privacy>.",
+      "timeChoice": "Which time do you mean?"
+    },
+    "placeholders": {
+      "email": "you@example.com",
+      "displayName": "As it should appear in your report",
+      "country": "Select a country",
+      "city": "Start typing a city…",
+      "discountCode": "e.g. SAVE10"
+    },
+    "hints": {
+      "email": "We'll send your reading to this address.",
+      "displayName": "Optional. Used only to personalise your report.",
+      "birthDate": "Dates from 1900 onwards are supported.",
+      "birthTime": "Use your birth certificate if you can: the Ascendant changes about every two hours.",
+      "birthCity": "Your birthplace sets the time zone and the Ascendant."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "email": "Please enter a valid email address.",
+      "date": "Please enter a valid date.",
+      "dateRange": "Please enter a date between {min} and {max}.",
+      "time": "Please enter a valid time.",
+      "country": "Please choose a country.",
+      "city": "Please choose a city from the list.",
+      "terms": "Please accept the Terms of Service to continue.",
+      "tooLong": "Please use at most {max} characters."
+    },
+    "combobox": {
+      "loading": "Searching…",
+      "noResults": "No matches found.",
+      "results": "{count, plural, =0 {No results} one {# result available} other {# results available}}",
+      "error": "We couldn't load the list. Please try again.",
+      "clear": "Clear"
+    },
+    "optional": "Optional",
+    "required": "Required",
+    "apply": "Apply",
+    "remove": "Remove"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "We couldn't reach our servers. Please check your connection and try again.",
+    "rate_limited": "Too many attempts. Please wait a moment and try again.",
+    "server_error": "Our servers are having trouble right now. Please try again in a few minutes.",
+    "not_found": "We couldn't find what you were looking for.",
+    "validation_error": "Please check the highlighted fields.",
+    "unauthorized": "Please sign in to continue.",
+    "forbidden": "You don't have permission to do that.",
+    "birth_date_out_of_range": "Please enter a birth date from 1900 onwards, and not in the future.",
+    "terms_not_accepted": "Please accept the Terms of Service to continue.",
+    "invalid_discount_code": "This discount code isn't valid.",
+    "ambiguous_local_time": "This time happened twice on that date because the clocks went back. Please choose which one you mean.",
+    "nonexistent_local_time": "This time didn't exist on that date because the clocks went forward. Did you mean {time}?",
+    "report_expired": "This report link has expired.",
+    "report_not_ready": "Your report isn't ready yet. Please check again in a moment.",
+    "discount": {
+      "not_found": "We don't recognise this code.",
+      "inactive": "This code is no longer active.",
+      "not_started": "This code isn't active yet.",
+      "expired": "This code has expired.",
+      "exhausted": "This code has reached its usage limit.",
+      "currency_mismatch": "This code can't be used for this purchase."
+    }
+  },
+  "errorPage": {
+    "title": "A cloud passed over the stars",
+    "body": "Something went wrong while loading this page. Please try again.",
+    "retry": "Try again",
+    "home": "Back to home"
+  },
+  "notFound": {
+    "eyebrow": "Error 404",
+    "title": "This page is lost among the stars",
+    "body": "The page you're looking for doesn't exist or has moved.",
+    "home": "Back to home",
+    "free": "Get a free reading"
+  },
+  "zodiac": {
+    "signs": {
+      "aries": "Aries",
+      "taurus": "Taurus",
+      "gemini": "Gemini",
+      "cancer": "Cancer",
+      "leo": "Leo",
+      "virgo": "Virgo",
+      "libra": "Libra",
+      "scorpio": "Scorpio",
+      "sagittarius": "Sagittarius",
+      "capricorn": "Capricorn",
+      "aquarius": "Aquarius",
+      "pisces": "Pisces"
+    },
+    "animals": {
+      "rat": "Rat",
+      "ox": "Ox",
+      "tiger": "Tiger",
+      "rabbit": "Rabbit",
+      "dragon": "Dragon",
+      "snake": "Snake",
+      "horse": "Horse",
+      "goat": "Goat",
+      "monkey": "Monkey",
+      "rooster": "Rooster",
+      "dog": "Dog",
+      "pig": "Pig"
+    },
+    "elements": {
+      "wood": "Wood",
+      "fire": "Fire",
+      "earth": "Earth",
+      "metal": "Metal",
+      "water": "Water"
+    },
+    "polarity": {
+      "yin": "Yin",
+      "yang": "Yang"
+    },
+    "labels": {
+      "sun": "Sun",
+      "moon": "Moon",
+      "ascendant": "Ascendant",
+      "sunSign": "Sun sign",
+      "yearAnimal": "Year animal",
+      "monthAnimal": "Month animal",
+      "dayAnimal": "Day animal",
+      "hourAnimal": "Hour animal",
+      "element": "Element",
+      "western": "Western astrology",
+      "chinese": "Chinese zodiac"
+    }
+  },
+  "orderStatus": {
+    "awaiting_payment": "Awaiting payment",
+    "paid": "Paid",
+    "queued": "In the queue",
+    "generating": "Being written",
+    "ready": "Ready",
+    "generation_failed": "Preparation delayed",
+    "expired": "Expired",
+    "abandoned": "Not completed",
+    "refunded": "Refunded"
+  },
+  "orderStatusDescription": {
+    "awaiting_payment": "We're waiting for your payment to be confirmed.",
+    "paid": "Payment confirmed. Your report will start shortly.",
+    "queued": "Your report is in the queue and will begin in a moment.",
+    "generating": "Your report is being written. This usually takes a few minutes.",
+    "ready": "Your report is ready to download.",
+    "generation_failed": "We hit a problem preparing your report. Our team has been notified and will resolve it.",
+    "expired": "The download window for this report has closed.",
+    "abandoned": "This order was not paid and has been closed.",
+    "refunded": "This order was refunded and the report is no longer available."
+  },
+  "offers": {
+    "label": "Special offer",
+    "useCode": "Use code",
+    "copyCode": "Copy code {code}",
+    "codeCopied": "Code copied",
+    "dismiss": "Hide this offer",
+    "endsOn": "Ends {date}",
+    "cta": "See the offer"
+  },
+  "blog": {
+    "by": "By {author}",
+    "readArticle": "Read the article"
+  },
+  "home": {
+    "traditions": {
+      "eyebrow": "East meets West"
+    },
+    "how": {
+      "eyebrow": "Three simple steps",
+      "numerals": "I,II,III"
+    },
+    "plans": {
+      "eyebrow": "Plans",
+      "badge": "Most complete",
+      "ctaFree": "Start your free reading",
+      "ctaPaid": "Get the full report"
+    },
+    "library": {
+      "eyebrow": "Book series",
+      "cta": "Explore the library"
+    },
+    "blog": {
+      "eyebrow": "The journal",
+      "cta": "Visit the blog"
+    },
+    "faq": {
+      "eyebrow": "Good to know"
+    },
+    "cta": {
+      "eyebrow": "Begin your journey"
+    }
+  },
+  "content": {
+    "home": {
+      "hero": {
+        "eyebrow": "Western astrology × the Chinese zodiac",
+        "title": "Where the stars of East and West meet",
+        "subtitle": "Discover your Sun, Moon and Ascendant alongside your Chinese animal pillars, blended into one reading written just for you.",
+        "cta_free": "Get your free reading",
+        "cta_paid": "Order the full report"
+      },
+      "traditions": {
+        "title": "Two traditions, one portrait of you",
+        "western": {
+          "title": "Western astrology",
+          "body": "Your Sun, Moon and Ascendant are calculated from the exact moment and place of your birth: how you shine, what you feel and how others first meet you."
+        },
+        "chinese": {
+          "title": "The Chinese zodiac",
+          "body": "Beyond your year animal, the four pillars of your birth (year, month, day and hour) reveal your elements, your rhythm and your inner nature."
+        },
+        "blend": {
+          "title": "The blend",
+          "body": "Where the two traditions agree, the message is clear; where they differ, new sides of you appear. Zodiac Blend weaves both into one coherent reading."
+        }
+      },
+      "how": {
+        "title": "How it works",
+        "step1": {
+          "title": "Share your birth details",
+          "body": "Your date, exact time and city of birth: everything we need to map the sky at the moment you arrived."
+        },
+        "step2": {
+          "title": "We calculate both charts",
+          "body": "Precise astronomical calculations find your Western placements and your Chinese pillars. No guesswork, no generic tables."
+        },
+        "step3": {
+          "title": "Receive your reading",
+          "body": "Your personal report is written, designed as an elegant PDF and delivered to your screen and your inbox."
+        }
+      },
+      "plans": {
+        "title": "Choose your reading",
+        "free": {
+          "title": "Free reading",
+          "body": "A first glimpse: your Western sun sign and your Chinese year animal, from your birth date alone.",
+          "features": "Your Western sun sign\nYour Chinese year animal and its element\nA short reading for each\nInstant, with no payment needed"
+        },
+        "paid": {
+          "title": "Full blended report",
+          "body": "Your complete portrait, calculated from your exact birth time and place and written for you alone.",
+          "features": "Sun, Moon and Ascendant\nYear, month, day and hour pillars\nSix in-depth chapters blending both traditions\nA designed PDF to download and keep\nDelivered by email within minutes"
+        }
+      },
+      "library": {
+        "title": "The Galaxy Library",
+        "body": "Book series that take you deeper into the stars, the elements and the wisdom of both traditions."
+      },
+      "blog": {
+        "title": "From the journal",
+        "body": "Essays and guides on astrology, the Chinese zodiac and the art of reading both together."
+      },
+      "faq": {
+        "title": "Questions, answered",
+        "q1": "What is Zodiac Blend?",
+        "a1": "Zodiac Blend combines Western astrology and the Chinese zodiac into a single reading. Instead of choosing one tradition, you see how both describe you, and where they meet.",
+        "q2": "What is the difference between the free reading and the full report?",
+        "a2": "The free reading uses only your birth date to find your Western sun sign and your Chinese year animal. The full report uses your exact birth time and city to calculate your Sun, Moon, Ascendant and all four Chinese pillars, then explores them in six personal chapters.",
+        "q3": "Why do you need my birth time and city?",
+        "a3": "The Moon moves quickly and the Ascendant changes about every two hours, and both depend on where you were born. Your hour pillar in the Chinese system also depends on the time. The more precise your details, the more precise your report.",
+        "q4": "What if I don't know my exact birth time?",
+        "a4": "Enter the closest time you know. Your sun sign and your year, month and day pillars will still be accurate, but the Ascendant and the hour pillar may differ.",
+        "q5": "How and when will I receive my report?",
+        "a5": "Once your payment is confirmed, your report is prepared, usually within a few minutes. You can download it from your order page, and we also email you a private link. The link stays valid for 24 hours, so remember to save your PDF.",
+        "q6": "Is my personal data safe?",
+        "a6": "We use your details only to calculate and deliver your reading. Payments are handled by our secure payment provider, so we never see your card details, and birth data is deleted after a limited period."
+      },
+      "cta": {
+        "title": "Your two skies are waiting",
+        "body": "Start with a free reading in seconds, or go deeper with your full blended report."
+      }
+    },
+    "free": {
+      "intro": {
+        "title": "Your free reading",
+        "body": "Enter your birth date to discover your Western sun sign and your Chinese year animal."
+      }
+    },
+    "reading": {
+      "intro": {
+        "title": "Your full blended report",
+        "body": "Tell us when and where you were born. We'll calculate both charts with precision and write your personal report."
+      },
+      "includes": "Your Sun, Moon and Ascendant\nYour four Chinese pillars: year, month, day and hour\nSix chapters blending both traditions\nAn elegantly designed PDF, yours to keep",
+      "privacy_note": "Your birth details are used only to prepare your report and are never shared."
+    },
+    "offers": {
+      "intro": {
+        "title": "Offers",
+        "body": "Seasonal offers and special codes for your next reading."
+      }
+    },
+    "library": {
+      "intro": {
+        "title": "The Galaxy Library",
+        "body": "Book series to explore the stars and the wisdom of both traditions."
+      }
+    },
+    "blog": {
+      "intro": {
+        "title": "The Journal",
+        "body": "Essays, guides and stories from the world of astrology and the Chinese zodiac."
+      }
+    },
+    "legal": {
+      "disclaimer": "Readings are offered for reflection and entertainment and are not a substitute for professional advice.",
+      "privacy": {
+        "body": "Our privacy policy is temporarily unavailable. Please try again shortly, or write to us at info@zodiacblend.com."
+      },
+      "terms": {
+        "body": "Our terms of service are temporarily unavailable. Please try again shortly, or write to us at info@zodiacblend.com."
+      }
+    },
+    "contact": {
+      "body": "We'd love to hear from you.\n\nWrite to us at info@zodiacblend.com or call +1-307-443-6533."
+    },
+    "company": {
+      "name": "Zodiac Blend LLC",
+      "address": "2106 House Ave Suite 581, Cheyenne, Wyoming 82001",
+      "phone": "+1-307-443-6533",
+      "email": "info@zodiacblend.com"
+    },
+    "footer": {
+      "tagline": "Two Traditions. One Truth."
+    },
+    "seo": {
+      "home": {
+        "title": "Zodiac Blend | Western Astrology & Chinese Zodiac Readings",
+        "description": "Blend Western astrology and the Chinese zodiac in one reading. Get your free sun sign and year animal, or a full personal report with your Sun, Moon, Ascendant and BaZi pillars."
+      }
+    }
+  }
+}
