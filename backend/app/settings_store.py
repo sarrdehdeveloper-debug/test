@@ -20,7 +20,7 @@ DEFAULTS: dict[str, Any] = {
     # Generation pipeline
     "gemini_model": "gemini-2.5-flash",
     "gemini_temperature": 0.9,
-    "gemini_max_output_tokens": 2048,
+    "gemini_max_output_tokens": 8192,  # 350-550 words in Arabic + thinking tokens need headroom
     "gemini_timeout_seconds": 60,
     "prompt_delay_min_seconds": 1.0,  # pause between consecutive prompts (client: 1-2 s)
     "prompt_delay_max_seconds": 2.0,
