@@ -1,0 +1,65 @@
+# Local / single-server deployment: PostgreSQL + API + worker + web.
+# Usage: docker compose up --build   then open http://localhost:3000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: zodiac
+      POSTGRES_PASSWORD: zodiac
+      POSTGRES_DB: zodiac
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zodiac"]
+      interval: 5s
+      retries: 10
+
+  migrate:
+    build: ./backend
+    env_file: ./backend/.env.example
+    environment:
+      ZB_DATABASE_URL: postgresql+psycopg://zodiac:zodiac@db:5432/zodiac
+    command: sh -c "alembic upgrade head && python -m app.cli import-geo && python -m app.cli seed"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build: ./backend
+    env_file: ./backend/.env.example
+    environment:
+      ZB_DATABASE_URL: postgresql+psycopg://zodiac:zodiac@db:5432/zodiac
+      ZB_STORAGE_DIR: /app/storage
+    volumes:
+      - storage:/app/storage
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+
+  worker:
+    build: ./backend
+    env_file: ./backend/.env.example
+    environment:
+      ZB_DATABASE_URL: postgresql+psycopg://zodiac:zodiac@db:5432/zodiac
+      ZB_STORAGE_DIR: /app/storage
+    command: python -m app.worker
+    volumes:
+      - storage:/app/storage
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  web:
+    build: ./frontend
+    environment:
+      API_BASE_URL: http://api:8000
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  storage:
