@@ -151,7 +151,7 @@ def free_signs(birth_date: date, *, year_boundary: YearBoundary) -> FreeSigns
 | `POST /payments/stripe/webhook` | raw Stripe event + `Stripe-Signature` | `{"received":true}` |
 | `POST /payments/fake/complete` | `{"order_id","access_token"}` — only when provider=`fake` and env≠production | `{"status":"queued"}` |
 | `GET /reports/{order_id}/download` | header `Authorization: Bearer <token>` (browser access token **or** email token) | `application/pdf`, `Content-Disposition: attachment; filename="ZodiacBlend-Report.pdf"`, `Cache-Control: no-store`. 404 bad token, 410 `report_expired`, 409 `report_not_ready` |
-| `GET /site-content` | `locale` | `{"locale":"ar","items":{"home.hero.title":"..."}}` (default-locale fallback per key) |
+| `GET /site-content` | `locale` | `{"locale":"ar","items":{"home.hero.title":"..."},"html":{"legal.privacy.body":"<p>…</p>"}}` — keys from `app/content/keys.py`; default-locale fallback per key; `html` holds sanitised HTML for `markdown`-format keys |
 | `GET /offers` | `locale`, `banner=true` (only banner offers) | `{"items":[OfferOut]}` active & within dates, by `sort_order` |
 | `GET /offers/{slug}` | `locale` | `OfferOut` |
 | `GET /blog` | `locale`, `page=1`, `page_size=9` (≤50) | `{"items":[PostSummary],"total","page","page_size"}` published only, newest first |

@@ -31,6 +31,8 @@ os.environ.setdefault("ZB_PAYMENT_PROVIDER", "fake")
 os.environ.setdefault("ZB_AI_PROVIDER", "fake")
 os.environ.setdefault("ZB_EMAIL_BACKEND", "console")
 os.environ.setdefault("ZB_SITE_URL", "http://testserver")
+if os.path.exists("/opt/pw-browsers/chromium-1194/chrome-linux/chrome"):
+    os.environ.setdefault("ZB_CHROMIUM_EXECUTABLE", "/opt/pw-browsers/chromium-1194/chrome-linux/chrome")
 
 # Imports below must happen after the environment is configured.
 from fastapi.testclient import TestClient  # noqa: E402
