@@ -1,0 +1,90 @@
+[
+  {
+    "Repository": "cookiecutter/cookiecutter-django",
+    "Archived": false,
+    "License": "BSD-3-Clause",
+    "DefaultBranch": "main",
+    "LatestDefaultBranchCommit": "2026-10-05T07:55:41Z",
+    "URL": "https://github.com/cookiecutter/cookiecutter-django"
+  },
+  {
+    "Repository": "fastapi/full-stack-fastapi-template",
+    "Archived": false,
+    "License": "MIT",
+    "DefaultBranch": "master",
+    "LatestDefaultBranchCommit": "2026-10-03T06:49:54Z",
+    "URL": "https://github.com/fastapi/full-stack-fastapi-template"
+  },
+  {
+    "Repository": "celery/celery",
+    "Archived": false,
+    "License": "NOASSERTION",
+    "DefaultBranch": "main",
+    "LatestDefaultBranchCommit": "2026-10-05T07:31:28Z",
+    "URL": "https://github.com/celery/celery"
+  },
+  {
+    "Repository": "rq/django-rq",
+    "Archived": false,
+    "License": "MIT",
+    "DefaultBranch": "master",
+    "LatestDefaultBranchCommit": "2026-08-30T05:28:11Z",
+    "URL": "https://github.com/rq/django-rq"
+  },
+  {
+    "Repository": "Bogdanp/dramatiq",
+    "Archived": false,
+    "License": "LGPL-3.0",
+    "DefaultBranch": "master",
+    "LatestDefaultBranchCommit": "2026-09-14T12:35:14Z",
+    "URL": "https://github.com/Bogdanp/dramatiq"
+  },
+  {
+    "Repository": "janbjorge/pgqueuer",
+    "Archived": false,
+    "License": "MIT",
+    "DefaultBranch": "main",
+    "LatestDefaultBranchCommit": "2026-10-05T07:37:08Z",
+    "URL": "https://github.com/janbjorge/pgqueuer"
+  },
+  {
+    "Repository": "wagtail/wagtail",
+    "Archived": false,
+    "License": "BSD-3-Clause",
+    "DefaultBranch": "main",
+    "LatestDefaultBranchCommit": "2026-10-01T11:08:47Z",
+    "URL": "https://github.com/wagtail/wagtail"
+  },
+  {
+    "Repository": "6tail/lunar-python",
+    "Archived": false,
+    "License": "MIT",
+    "DefaultBranch": "master",
+    "LatestDefaultBranchCommit": "2026-01-24T03:07:22Z",
+    "URL": "https://github.com/6tail/lunar-python"
+  },
+  {
+    "Repository": "astrorigin/pyswisseph",
+    "Archived": false,
+    "License": "AGPL-3.0",
+    "DefaultBranch": "master",
+    "LatestDefaultBranchCommit": "2026-04-01T08:19:24Z",
+    "URL": "https://github.com/astrorigin/pyswisseph"
+  },
+  {
+    "Repository": "vercel/next.js",
+    "Archived": false,
+    "License": "MIT",
+    "DefaultBranch": "canary",
+    "LatestDefaultBranchCommit": "2026-10-05T09:13:41Z",
+    "URL": "https://github.com/vercel/next.js"
+  },
+  {
+    "Repository": "TechEmpower/FrameworkBenchmarks",
+    "Archived": true,
+    "License": "NOASSERTION",
+    "DefaultBranch": "master",
+    "LatestDefaultBranchCommit": "2026-03-23T21:28:51Z",
+    "URL": "https://github.com/TechEmpower/FrameworkBenchmarks"
+  }
+]

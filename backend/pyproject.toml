@@ -1,0 +1,22 @@
+[project]
+name = "zodiac-blend-api"
+version = "1.0.0"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ARG", "SIM", "RUF"]
+ignore = ["S101", "B008", "RUF001", "RUF002", "RUF003", "S311"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "ARG", "E501"]
+"app/seed/**" = ["E501", "RUF001"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning:lunar_python.*"]
