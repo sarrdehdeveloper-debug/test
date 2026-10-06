@@ -96,6 +96,14 @@ class Settings(BaseSettings):
                 raise ValueError("ZB_IP_HASH_SECRET must be set to a random value of 32+ characters in production")
             if not self.cookie_secure:
                 raise ValueError("ZB_COOKIE_SECURE must be true in production")
+            if self.payment_provider == "fake":
+                raise ValueError("ZB_PAYMENT_PROVIDER=fake is not allowed in production")
+            if self.ai_provider == "fake":
+                raise ValueError("ZB_AI_PROVIDER=fake is not allowed in production")
+        if self.payment_provider == "stripe" and not (self.stripe_secret_key and self.stripe_webhook_secret):
+            raise ValueError("ZB_STRIPE_SECRET_KEY and ZB_STRIPE_WEBHOOK_SECRET are required for Stripe")
+        if self.ai_provider == "gemini" and not self.gemini_api_key:
+            raise ValueError("ZB_GEMINI_API_KEY is required when ZB_AI_PROVIDER=gemini")
         return self
 
 

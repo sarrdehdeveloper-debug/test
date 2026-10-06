@@ -44,7 +44,7 @@ def compute_signs(db: Session, payload: FreeReadingIn) -> FreeSigns:
             422,
             "birth_date_out_of_range",
             "Please enter a birth date from 1900 onwards, and not in the future.",
-            {"min_date": exc.earliest.isoformat(), "max_date": exc.latest.isoformat()},
+            {"earliest": exc.earliest.isoformat(), "latest": exc.latest.isoformat()},
         ) from None
 
 

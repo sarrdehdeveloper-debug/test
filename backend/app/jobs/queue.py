@@ -19,7 +19,7 @@ from app.utils import utcnow
 
 # Job kinds (handlers are registered in app.jobs.registry)
 GENERATE_REPORT = "generate_report"  # payload: {"order_id": str}
-SEND_REPORT_EMAIL = "send_report_email"  # payload: {"order_id": str, "email_token": str}
+SEND_REPORT_EMAIL = "send_report_email"  # payload: {"order_id": str} — the email token is created at send time
 CLEANUP = "cleanup"  # payload: {} — expire reports, abandon unpaid orders, purge personal data
 
 

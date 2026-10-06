@@ -35,8 +35,10 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+    # Only reachable from this machine: the public entry point is the web service (/api is proxied),
+    # which sets a trustworthy X-Forwarded-For used for rate limiting.
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
 
   worker:
     build: ./backend
@@ -52,9 +54,15 @@ services:
         condition: service_completed_successfully
 
   web:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        API_BASE_URL: http://api:8000
+        SITE_URL: http://localhost:3000
     environment:
       API_BASE_URL: http://api:8000
+      # Number of reverse proxies (e.g. nginx/Caddy with TLS) in front of this service.
+      TRUSTED_PROXY_HOPS: "0"
     depends_on:
       - api
     ports:

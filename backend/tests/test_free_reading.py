@@ -275,7 +275,7 @@ def test_birth_date_out_of_range(client, db, birth_date):
     assert response.status_code == 422
     error = response.json()["error"]
     assert error["code"] == "birth_date_out_of_range"
-    assert error["details"]["min_date"] == "1900-01-01"
+    assert error["details"]["earliest"] == "1900-01-01"
     assert request_count(db) == 0
 
 
@@ -284,7 +284,7 @@ def test_tomorrow_is_out_of_range(client, monkeypatch):
     assert client.post(URL, json=body(birth_date="2026-10-05")).status_code == 200
     response = client.post(URL, json=body(birth_date="2026-10-06"))
     assert response.json()["error"]["code"] == "birth_date_out_of_range"
-    assert response.json()["error"]["details"]["max_date"] == "2026-10-05"
+    assert response.json()["error"]["details"]["latest"] == "2026-10-05"
 
 
 @pytest.mark.parametrize(

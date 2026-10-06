@@ -271,6 +271,14 @@ See `backend/app/config.py` and `backend/.env.example`. Key ones: `ZB_DATABASE_U
 `ZB_CHROMIUM_EXECUTABLE`, `ZB_COOKIE_SECURE`. Business settings (price, prompt delays, min words, model,
 access hours, calculation conventions, retention) are edited in the dashboard (`settings_store.DEFAULTS`).
 
+Frontend env: `API_BASE_URL` (build **and** run time — the `/api` rewrite target is fixed at build),
+`SITE_URL`, `TRUSTED_PROXY_HOPS` (reverse proxies in front of Next.js). On `/api/*` the Next.js proxy
+replaces `X-Forwarded-For` with a single client address, so the API must only be reachable through it.
+Stripe webhook URL: `{site_url}/api/v1/payments/stripe/webhook` with events `checkout.session.completed`,
+`checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`,
+`checkout.session.expired`, `charge.refunded`. Production refuses `fake` payment/AI providers and
+requires `ZB_IP_HASH_SECRET`, `ZB_COOKIE_SECURE=true` and the Stripe/Gemini keys.
+
 ## 9. Open client decisions (defaults chosen, all configurable)
 1. Slogan: images say "Two Traditions. One Truth." (used); brief says "Two Culture One Truth".
 2. Chinese year boundary: Lichun (BaZi) by default; Lunar New Year selectable.

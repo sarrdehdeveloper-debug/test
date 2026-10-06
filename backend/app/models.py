@@ -476,6 +476,7 @@ class Order(TimestampMixin, Base):
     __table_args__ = (
         Index("ix_orders_status_created", "status", "created_at"),
         Index("ix_orders_email", "email"),
+        Index("ix_orders_provider_payment_id", "provider_payment_id"),
         CheckConstraint("amount_cents >= 0", name="ck_order_amount_nonneg"),
     )
 
@@ -527,7 +528,10 @@ class Job(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
-    __table_args__ = (Index("ix_jobs_claim", "status", "run_at"),)
+    __table_args__ = (
+        Index("ix_jobs_claim", "status", "run_at"),
+        Index("ix_jobs_payload_order_id", text("(payload->>'order_id')")),
+    )
 
 
 class SectionStatus(enum.StrEnum):
