@@ -4,16 +4,23 @@ import { ArrowIcon, Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { apiGet } from "@/lib/api/server";
+import { CACHE_TAGS } from "@/lib/api/tags";
 import type { SiteContentAccessor } from "@/lib/content";
 import type { Paginated, PostSummary } from "@/lib/types";
 
 /** Latest 3 posts; renders nothing when there are none or the API is unavailable. */
-export async function BlogTeaser({ content: c, locale }: { content: SiteContentAccessor; locale: string }) {
+export async function BlogTeaser({
+  content: c,
+  locale,
+}: {
+  content: SiteContentAccessor;
+  locale: string;
+}) {
   const data = await apiGet<Paginated<PostSummary>>("/blog", {
     locale,
     query: { page: 1, page_size: 3 },
     revalidate: 120,
-    tags: ["blog"],
+    tags: [CACHE_TAGS.blog],
   });
   const posts = data?.items?.slice(0, 3) ?? [];
   if (posts.length === 0) return null;

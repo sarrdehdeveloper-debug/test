@@ -47,5 +47,11 @@ export function GlyphBadge({
 
 /** Western zodiac sign glyph (♈︎ … ♓︎) in a gold ring. */
 export function SignIcon({ sign, ...props }: GlyphBadgeProps & { sign: WesternSign }) {
-  return <GlyphBadge glyph={SIGN_GLYPHS[sign]} fontClass="font-[family-name:var(--font-symbol)]" {...props} />;
+  return (
+    <GlyphBadge
+      glyph={SIGN_GLYPHS[sign]}
+      fontClass="font-[family-name:var(--font-symbol)]"
+      {...props}
+    />
+  );
 }

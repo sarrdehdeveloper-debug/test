@@ -15,11 +15,18 @@ export function Spinner({ label, size = "md", className }: SpinnerProps) {
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      className={cn("animate-spin motion-reduce:animate-[spin_3s_linear_infinite]", SIZES[size], className)}
+      // data-spinner: keeps a slow rotation under prefers-reduced-motion (see globals.css).
+      data-spinner=""
+      className={cn("animate-spin", SIZES[size], className)}
       aria-hidden="true"
     >
       <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeOpacity="0.2" strokeWidth="2" />
-      <path d="M21.5 12a9.5 9.5 0 0 0-9.5-9.5" stroke="#C78933" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M21.5 12a9.5 9.5 0 0 0-9.5-9.5"
+        stroke="#C78933"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       <circle cx="12" cy="2.5" r="1.6" fill="#E9C77B" />
     </svg>
   );

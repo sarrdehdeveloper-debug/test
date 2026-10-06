@@ -191,8 +191,7 @@ export function Combobox<T>({
       case "ArrowUp":
         event.preventDefault();
         if (!open) openList();
-        else if (options.length)
-          setActiveIndex((i) => (i <= 0 ? options.length - 1 : i - 1));
+        else if (options.length) setActiveIndex((i) => (i <= 0 ? options.length - 1 : i - 1));
         break;
       case "Enter":
         if (open && activeIndex >= 0 && options[activeIndex] !== undefined) {
@@ -278,7 +277,15 @@ export function Combobox<T>({
               onClick={clear}
               className="grid size-7 place-items-center rounded-full text-ink-soft hover:bg-parchment hover:text-ink"
             >
-              <svg viewBox="0 0 20 20" className="size-3.5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <svg
+                viewBox="0 0 20 20"
+                className="size-3.5"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
                 <path d="m5 5 10 10M15 5 5 15" />
               </svg>
             </button>
@@ -332,7 +339,16 @@ export function Combobox<T>({
                 {renderOption ? renderOption(item, { active, selected }) : getOptionLabel(item)}
               </span>
               {selected ? (
-                <svg viewBox="0 0 20 20" className="size-4 shrink-0 text-gold-deep" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  viewBox="0 0 20 20"
+                  className="size-4 shrink-0 text-gold-deep"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="m4.5 10.5 3.5 3.5 7.5-8" />
                 </svg>
               ) : null}
@@ -350,7 +366,10 @@ export function Combobox<T>({
           </li>
         ) : null}
         {status === "loading" && options.length === 0 ? (
-          <li role="presentation" className="flex items-center gap-2 px-4 py-3 text-sm text-ink-soft">
+          <li
+            role="presentation"
+            className="flex items-center gap-2 px-4 py-3 text-sm text-ink-soft"
+          >
             <Spinner size="sm" /> {t("loading")}
           </li>
         ) : null}

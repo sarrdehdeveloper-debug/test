@@ -17,7 +17,7 @@ export async function Header() {
   return (
     <header
       data-tone="night"
-      className="sticky top-0 z-40 border-b border-gold-light/15 bg-night/90 backdrop-blur-md supports-[backdrop-filter]:bg-night/80"
+      className="sticky top-0 z-40 border-b border-gold-light/15 bg-night shadow-[0_8px_24px_-16px_rgb(0_0_0/0.6)]"
     >
       <Container size="wide" className="flex h-16 items-center justify-between gap-4 lg:h-[4.5rem]">
         <Link href="/" aria-label={t("homeLink")} className="shrink-0 rounded-md">
@@ -41,7 +41,9 @@ export async function Header() {
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher className="hidden sm:flex" />
-          <Button href="/reading" size="sm" className="hidden xl:inline-flex">
+          {/* Hidden at lg, where the full navigation needs the room; inside the menu on phones.
+              Variant-only hiding: a plain `hidden` loses to the Button's base `inline-flex`. */}
+          <Button href="/reading" size="sm" className="max-md:hidden lg:max-xl:hidden">
             {t("cta")}
           </Button>
           <MobileMenu

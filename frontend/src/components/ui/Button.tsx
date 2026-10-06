@@ -142,7 +142,13 @@ export function ArrowIcon({ className }: { className?: string }) {
       aria-hidden="true"
       className={cn("size-4 shrink-0 rtl:-scale-x-100", className)}
     >
-      <path d="M4 10h11m-4-4.5L15.5 10 11 14.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M4 10h11m-4-4.5L15.5 10 11 14.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

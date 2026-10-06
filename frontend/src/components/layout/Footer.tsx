@@ -26,13 +26,18 @@ export async function Footer() {
   const year = new Date().getUTCFullYear();
 
   const linkClass = "text-mist transition-colors hover:text-gold-light";
+  const creditLinkClass =
+    "underline decoration-gold-light/40 underline-offset-2 transition-colors hover:text-gold-light";
   const headingClass = "eyebrow mb-5";
 
   return (
     <footer data-tone="night" className="relative isolate overflow-hidden bg-night-deep">
       <hr aria-hidden="true" className="rule-gold" />
       <StarField density="low" seed={21} className="-z-10 opacity-50" />
-      <Container size="wide" className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:gap-10">
+      <Container
+        size="wide"
+        className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:gap-10"
+      >
         <div className="sm:col-span-2 lg:col-span-1">
           <Link href="/" aria-label={t("homeLink")} className="inline-block rounded-md">
             <Image src="/brand/logo.svg" alt="" width={696} height={661} className="h-auto w-44" />
@@ -104,9 +109,31 @@ export async function Footer() {
       <div className="border-t border-gold-light/10">
         <Container
           size="wide"
-          className="flex flex-col items-center justify-between gap-4 py-6 text-sm text-mist/80 sm:flex-row"
+          className="flex flex-col items-center justify-between gap-4 py-6 text-center text-sm text-mist/80 md:flex-row md:text-start"
         >
-          <p>{tf("rights", { year, company })}</p>
+          <div className="space-y-1.5">
+            <p>{tf("rights", { year, company })}</p>
+            {/* Required attribution: city & coordinate data come from GeoNames (CC BY 4.0). */}
+            <p className="text-xs text-mist/70">
+              {tf.rich("geonames", {
+                geonames: (chunks) => (
+                  <a href="https://www.geonames.org/" dir="ltr" className={creditLinkClass}>
+                    {chunks}
+                  </a>
+                ),
+                license: (chunks) => (
+                  <a
+                    href="https://creativecommons.org/licenses/by/4.0/"
+                    rel="license"
+                    dir="ltr"
+                    className={creditLinkClass}
+                  >
+                    {chunks}
+                  </a>
+                ),
+              })}
+            </p>
+          </div>
           <LanguageSwitcher variant="inline" />
         </Container>
       </div>

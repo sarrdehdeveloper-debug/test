@@ -40,7 +40,9 @@ export async function Plans({
       <Heading id="plans-title" eyebrow={t("eyebrow")} title={c.t("home.plans.title")} />
       <div className="mx-auto mt-14 grid max-w-5xl items-stretch gap-8 md:grid-cols-2">
         <Card padding="lg" className="flex flex-col">
-          <h3 className="font-serif text-3xl font-semibold text-fg">{c.t("home.plans.free.title")}</h3>
+          <h3 className="font-serif text-3xl font-semibold text-fg">
+            {c.t("home.plans.free.title")}
+          </h3>
           <p className="mt-4 flex items-baseline gap-2">
             <span className="font-display text-4xl font-semibold text-gold-deep">{tc("free")}</span>
           </p>
@@ -63,7 +65,9 @@ export async function Plans({
           <span className="absolute inset-x-0 top-0 mx-auto w-fit rounded-b-xl bg-gold-soft-gradient px-4 py-1.5 font-display text-[0.7rem] font-bold tracking-[0.18em] text-night uppercase rtl:text-sm rtl:tracking-normal">
             {t("badge")}
           </span>
-          <h3 className="mt-4 font-serif text-3xl font-semibold text-ivory">{c.t("home.plans.paid.title")}</h3>
+          <h3 className="mt-4 font-serif text-3xl font-semibold text-ivory">
+            {c.t("home.plans.paid.title")}
+          </h3>
           <p className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="font-display text-4xl font-semibold text-gold-gradient" dir="ltr">
               {price}

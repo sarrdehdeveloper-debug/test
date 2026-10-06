@@ -30,7 +30,10 @@ export default function GlobalNotFound() {
             </p>
             <Ornament className="mx-auto mt-6 h-4 w-40 text-gold-bright" />
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link href="/en" className="inline-flex h-11 items-center justify-center rounded-full bg-gold-soft-gradient px-6 font-semibold text-night">
+              <Link
+                href="/en"
+                className="inline-flex h-11 items-center justify-center rounded-full bg-gold-soft-gradient px-6 font-semibold text-night"
+              >
                 Back to home
               </Link>
               <Link

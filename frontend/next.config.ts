@@ -6,7 +6,8 @@ import createNextIntlPlugin from "next-intl/plugin";
  * origin is proxied there (see `rewrites`). Server Components call it directly (src/lib/api/server.ts).
  *
  * NOTE: rewrites are resolved at BUILD time for `output: "standalone"`, so API_BASE_URL must be set
- * when running `next build` (the Dockerfile passes it as a build arg).
+ * when running `next build` (the Dockerfile takes it as a build arg, default http://api:8000), and
+ * again at run time for Server Components. src/proxy.ts normalises X-Forwarded-For on /api/*.
  */
 const API_BASE_URL = (process.env.API_BASE_URL || "http://localhost:8000").replace(/\/+$/, "");
 const isDev = process.env.NODE_ENV === "development";
@@ -17,12 +18,14 @@ const isDev = process.env.NODE_ENV === "development";
  * - No third-party scripts: Stripe Checkout is a top-level navigation, not an embedded script.
  * - `form-action` allows Stripe because a form submission that is redirected to Checkout is
  *   checked against `form-action` in Chromium.
+ * - `img-src https:`: the CMS accepts absolute https image URLs (offers, blog covers, books);
+ *   uploaded media is same-origin (/api/v1/media/...). Images cannot run code.
  */
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
   "media-src 'self'",

@@ -16,7 +16,12 @@ export async function ClosingCta({ content: c }: { content: SiteContentAccessor 
         height={128}
         className="mx-auto mb-8 size-20 drop-shadow-[0_0_24px_rgb(199_137_51/0.45)]"
       />
-      <Heading id="cta-title" eyebrow={t("eyebrow")} title={c.t("home.cta.title")} lead={c.t("home.cta.body")} />
+      <Heading
+        id="cta-title"
+        eyebrow={t("eyebrow")}
+        title={c.t("home.cta.title")}
+        lead={c.t("home.cta.body")}
+      />
       <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
         <Button href="/free" size="lg" icon={<ArrowIcon />}>
           {c.t("home.hero.cta_free")}

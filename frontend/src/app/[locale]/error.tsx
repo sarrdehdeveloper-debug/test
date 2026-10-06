@@ -20,7 +20,10 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <section data-tone="night" className="relative isolate flex min-h-[70vh] items-center overflow-hidden bg-night-sky">
+    <section
+      data-tone="night"
+      className="relative isolate flex min-h-[70vh] items-center overflow-hidden bg-night-sky"
+    >
       <Container size="narrow" className="py-24 text-center">
         <h1 className="font-serif text-4xl font-semibold text-ivory sm:text-5xl">{t("title")}</h1>
         <Ornament className="mx-auto mt-6 h-4 w-40 text-gold-bright" />

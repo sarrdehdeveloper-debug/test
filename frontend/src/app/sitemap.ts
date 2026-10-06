@@ -3,7 +3,17 @@ import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/site";
 
 /** Public static pages (locale-less). Dynamic pages (blog posts, offers, library) can be appended. */
-const STATIC_PATHS = ["/", "/free", "/reading", "/offers", "/library", "/blog", "/privacy", "/terms", "/contact"];
+const STATIC_PATHS = [
+  "/",
+  "/free",
+  "/reading",
+  "/offers",
+  "/library",
+  "/blog",
+  "/privacy",
+  "/terms",
+  "/contact",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();

@@ -28,7 +28,8 @@ export function useFieldControl(props: {
     "aria-describedby": describedBy,
     "aria-invalid": invalid,
     required: props.required ?? field?.required ?? undefined,
-    invalid: invalid === true || invalid === "true" || invalid === "grammar" || invalid === "spelling",
+    invalid:
+      invalid === true || invalid === "true" || invalid === "grammar" || invalid === "spelling",
   };
 }
 
@@ -112,7 +113,12 @@ export function Field({
 export function FieldError({ id, children }: { id?: string; children: ReactNode }) {
   return (
     <p id={id} className="flex items-start gap-1.5 text-sm font-medium text-danger">
-      <svg viewBox="0 0 20 20" className="mt-0.5 size-4 shrink-0" aria-hidden="true" fill="currentColor">
+      <svg
+        viewBox="0 0 20 20"
+        className="mt-0.5 size-4 shrink-0"
+        aria-hidden="true"
+        fill="currentColor"
+      >
         <path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm-.9 4.2h1.8v5.6H9.1V5.7Zm.9 9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2Z" />
       </svg>
       <span>{children}</span>

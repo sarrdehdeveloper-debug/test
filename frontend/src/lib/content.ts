@@ -2,14 +2,12 @@ import { getMessages } from "next-intl/server";
 import { isAppLocale, routing } from "@/i18n/routing";
 import { cache } from "react";
 import { apiGet } from "./api/server";
+import { CACHE_TAGS } from "./api/tags";
 import { createContentAccessor, type SiteContentAccessor } from "./content-core";
 import type { SiteContent } from "./types";
 
 export type { SiteContentAccessor } from "./content-core";
 export type { ContentKey } from "./content-keys";
-
-/** Cache tag of GET /site-content (call `revalidateTag(SITE_CONTENT_TAG, "max")` after edits). */
-export const SITE_CONTENT_TAG = "site-content";
 
 /**
  * Editable copy for Server Components (keys: backend/app/content/keys.py, src/lib/content-keys.ts).
@@ -24,7 +22,7 @@ export const SITE_CONTENT_TAG = "site-content";
  */
 export const getSiteContent = cache(async (locale: string): Promise<SiteContentAccessor> => {
   const [data, messages] = await Promise.all([
-    apiGet<SiteContent>("/site-content", { locale, revalidate: 60, tags: [SITE_CONTENT_TAG] }),
+    apiGet<SiteContent>("/site-content", { locale, revalidate: 60, tags: [CACHE_TAGS.siteContent] }),
     getMessages({ locale: isAppLocale(locale) ? locale : routing.defaultLocale }),
   ]);
   return createContentAccessor(locale, data, messages.content);

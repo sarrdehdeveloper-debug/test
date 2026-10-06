@@ -125,8 +125,12 @@ async function main() {
   const logoRatio = 661.19 / 696.1;
 
   // Full logo, transparent (emails use logo.png at 512 px wide).
-  await sharp(await renderSvg(logoSvg, 512, Math.round(512 * logoRatio))).toFile(join(out, "logo.png"));
-  await sharp(await renderSvg(logoSvg, 1024, Math.round(1024 * logoRatio))).toFile(join(out, "logo@2x.png"));
+  await sharp(await renderSvg(logoSvg, 512, Math.round(512 * logoRatio))).toFile(
+    join(out, "logo.png"),
+  );
+  await sharp(await renderSvg(logoSvg, 1024, Math.round(1024 * logoRatio))).toFile(
+    join(out, "logo@2x.png"),
+  );
 
   // Emblem only, transparent.
   await sharp(await renderSvg(emblemSvg, 512, 512)).toFile(join(out, "emblem.png"));
@@ -149,7 +153,10 @@ async function main() {
 
   const icoImages = [];
   for (const size of [16, 32, 48]) {
-    icoImages.push({ size, data: await onBackground(size, 0.96, { radius: Math.round(size * 0.2) }) });
+    icoImages.push({
+      size,
+      data: await onBackground(size, 0.96, { radius: Math.round(size * 0.2) }),
+    });
   }
   writeFileSync(join(appDir, "favicon.ico"), ico(icoImages));
 

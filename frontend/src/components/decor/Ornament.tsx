@@ -39,7 +39,12 @@ export function Ornament({ className }: DecorProps) {
 /** Four-pointed star (the logo's sparkle). */
 export function Sparkle({ className }: DecorProps) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className={cn("size-4", className)}>
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      className={cn("size-4", className)}
+    >
       <path fill="currentColor" d="M12 0l2.1 9.9L24 12l-9.9 2.1L12 24l-2.1-9.9L0 12l9.9-2.1Z" />
     </svg>
   );
@@ -48,7 +53,12 @@ export function Sparkle({ className }: DecorProps) {
 /** Crescent moon. */
 export function Crescent({ className }: DecorProps) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className={cn("size-4", className)}>
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      className={cn("size-4", className)}
+    >
       <path fill="currentColor" d="M15.5 2.5A9.8 9.8 0 1 0 21.5 19 8 8 0 1 1 15.5 2.5Z" />
     </svg>
   );
@@ -57,7 +67,12 @@ export function Crescent({ className }: DecorProps) {
 /** Yin–yang, drawn in currentColor on a transparent background. */
 export function YinYang({ className }: DecorProps) {
   return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false" className={cn("size-10", className)}>
+    <svg
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+      focusable="false"
+      className={cn("size-10", className)}
+    >
       <circle cx="24" cy="24" r="22.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
       <path
         fill="currentColor"

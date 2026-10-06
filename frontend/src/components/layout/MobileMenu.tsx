@@ -51,12 +51,16 @@ export function MobileMenu({ items, labels, className }: MobileMenuProps) {
         className="grid size-10 place-items-center rounded-full border border-gold-light/30 text-gold-light transition-colors hover:border-gold-light/70"
       >
         <span className="sr-only">{open ? labels.close : labels.open}</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-          {open ? (
-            <path d="M6 6l12 12M18 6 6 18" />
-          ) : (
-            <path d="M4 7h16M4 12h16M4 17h10" />
-          )}
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          className="size-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        >
+          {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h10" />}
         </svg>
       </button>
 

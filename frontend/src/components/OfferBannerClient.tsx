@@ -65,7 +65,15 @@ export function DismissibleOffer({
         )}
       >
         <span className="sr-only">{dismissLabel}</span>
-        <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <svg
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+          className="size-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        >
           <path d="m5 5 10 10M15 5 5 15" />
         </svg>
       </button>
@@ -102,7 +110,11 @@ export function CopyCode({
         className,
       )}
     >
-      <code lang="en" dir="ltr" className="font-display text-sm font-semibold tracking-[0.14em] text-gold-light select-all">
+      <code
+        lang="en"
+        dir="ltr"
+        className="font-display text-sm font-semibold tracking-[0.14em] text-gold-light select-all"
+      >
         {code}
       </code>
       <button
@@ -112,11 +124,28 @@ export function CopyCode({
       >
         <span className="sr-only">{copyLabel}</span>
         {copied ? (
-          <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="m4.5 10.5 3.5 3.5 7.5-8" />
           </svg>
         ) : (
-          <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
+          <svg
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          >
             <rect x="7" y="7" width="9.5" height="9.5" rx="2" />
             <path d="M13 7V5a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 4 5v6.5A1.5 1.5 0 0 0 5.5 13H7" />
           </svg>

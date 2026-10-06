@@ -3,7 +3,12 @@
 import "./globals.css";
 
 /** Last-resort error UI (errors in the root layout). Renders its own document; bilingual. */
-export default function GlobalError({ retry }: { error: Error & { digest?: string }; retry: () => void }) {
+export default function GlobalError({
+  retry,
+}: {
+  error: Error & { digest?: string };
+  retry: () => void;
+}) {
   return (
     <html lang="en" dir="ltr">
       <body data-tone="night" className="bg-night-sky">

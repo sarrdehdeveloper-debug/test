@@ -76,9 +76,7 @@ export function isApiErrorBody(value: unknown): value is ApiErrorBody {
   if (!value || typeof value !== "object") return false;
   const error = (value as { error?: unknown }).error;
   return (
-    !!error &&
-    typeof error === "object" &&
-    typeof (error as { code?: unknown }).code === "string"
+    !!error && typeof error === "object" && typeof (error as { code?: unknown }).code === "string"
   );
 }
 

@@ -11,7 +11,7 @@ import { SkipLink } from "@/components/layout/SkipLink";
 import { pickClientMessages } from "@/i18n/client-messages";
 import { LOCALE_META, routing } from "@/i18n/routing";
 import { OG_IMAGE } from "@/lib/metadata";
-import { siteUrl } from "@/lib/site";
+import { SITE_NAME, siteUrl } from "@/lib/site";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
     metadataBase: new URL(siteUrl()),
     title: { default: t("siteName"), template: `%s | ${t("siteName")}` },
     description: t("description"),
-    applicationName: "Zodiac Blend",
+    applicationName: SITE_NAME,
     openGraph: {
       siteName: t("siteName"),
       type: "website",

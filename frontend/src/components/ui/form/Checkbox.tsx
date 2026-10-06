@@ -30,7 +30,10 @@ export function Checkbox({ label, error, hint, id, className, ...props }: Checkb
           aria-invalid={error ? true : props["aria-invalid"]}
           className="mt-0.5 size-5 shrink-0 cursor-pointer rounded border-gold/50 accent-gold-bright focus-visible:outline-2 focus-visible:outline-offset-2"
         />
-        <label htmlFor={inputId} className="cursor-pointer text-sm leading-relaxed text-fg [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2">
+        <label
+          htmlFor={inputId}
+          className="cursor-pointer text-sm leading-relaxed text-fg [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2"
+        >
           {label}
         </label>
       </div>

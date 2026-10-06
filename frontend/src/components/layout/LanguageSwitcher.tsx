@@ -48,7 +48,14 @@ export function LanguageSwitcher({ className, variant = "pill", onSwitch }: Lang
               : "py-1 text-fg hover:text-accent",
           )}
         >
-          <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4 text-gold-light" fill="none" stroke="currentColor" strokeWidth="1.4">
+          <svg
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+            className="size-4 text-gold-light"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+          >
             <circle cx="10" cy="10" r="7.5" />
             <path d="M2.5 10h15M10 2.5c2.2 2.3 3.2 4.8 3.2 7.5S12.2 15.2 10 17.5C7.8 15.2 6.8 12.7 6.8 10S7.8 4.8 10 2.5Z" />
           </svg>

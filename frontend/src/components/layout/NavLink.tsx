@@ -18,7 +18,12 @@ export function NavLink({ href, children, className, exact, onClick }: NavLinkPr
   const isExact = exact ?? href === "/";
   const active = isExact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
   return (
-    <Link href={href} aria-current={active ? "page" : undefined} className={className} onClick={onClick}>
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={className}
+      onClick={onClick}
+    >
       {children}
     </Link>
   );

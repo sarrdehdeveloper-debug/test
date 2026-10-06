@@ -30,7 +30,8 @@
     "address": "Address",
     "phone": "Phone",
     "email": "Email",
-    "rights": "© {year} {company}. All rights reserved."
+    "rights": "© {year} {company}. All rights reserved.",
+    "geonames": "Place data © <geonames>GeoNames (geonames.org)</geonames>, <license>CC BY 4.0</license>"
   },
   "common": {
     "getFreeReading": "Get your free reading",
@@ -267,117 +268,117 @@
   "content": {
     "home": {
       "hero": {
-        "eyebrow": "Western astrology × the Chinese zodiac",
-        "title": "Where the stars of East and West meet",
-        "subtitle": "Discover your Sun, Moon and Ascendant alongside your Chinese animal pillars, blended into one reading written just for you.",
-        "cta_free": "Get your free reading",
-        "cta_paid": "Order the full report"
+        "eyebrow": "Western astrology × Chinese zodiac",
+        "title": "Two Traditions. One Truth.",
+        "subtitle": "Your sun sign and your Chinese animal have been describing the same person all along. Zodiac Blend reads them together and shows you the whole picture.",
+        "cta_free": "Get my free reading",
+        "cta_paid": "Get my full report"
       },
       "traditions": {
-        "title": "Two traditions, one portrait of you",
+        "title": "Two ancient ways of reading one life",
         "western": {
           "title": "Western astrology",
-          "body": "Your Sun, Moon and Ascendant are calculated from the exact moment and place of your birth: how you shine, what you feel and how others first meet you."
+          "body": "Born in Babylon and refined by Greek and Arab astronomers, Western astrology reads the sky at the moment you were born: your Sun shows your core drive, your Moon your inner life and your Ascendant the way you meet the world."
         },
         "chinese": {
-          "title": "The Chinese zodiac",
-          "body": "Beyond your year animal, the four pillars of your birth (year, month, day and hour) reveal your elements, your rhythm and your inner nature."
+          "title": "The Chinese zodiac & BaZi",
+          "body": "Rooted in more than two thousand years of Chinese calendar wisdom, the Chinese zodiac links each year to one of twelve animals and five elements. BaZi, the Four Pillars, goes further and reads your year, month, day and hour of birth as a portrait of your nature."
         },
         "blend": {
-          "title": "The blend",
-          "body": "Where the two traditions agree, the message is clear; where they differ, new sides of you appear. Zodiac Blend weaves both into one coherent reading."
+          "title": "The Zodiac Blend",
+          "body": "We calculate both charts precisely and read them side by side. Where they agree, the message is strong; where they differ, you discover nuances that neither tradition reveals alone."
         }
       },
       "how": {
         "title": "How it works",
         "step1": {
           "title": "Share your birth details",
-          "body": "Your date, exact time and city of birth: everything we need to map the sky at the moment you arrived."
+          "body": "Your birth date is all the free reading needs. For the full report, add the exact time and place of your birth. No account required."
         },
         "step2": {
           "title": "We calculate both charts",
-          "body": "Precise astronomical calculations find your Western placements and your Chinese pillars. No guesswork, no generic tables."
+          "body": "Our engine computes your Sun, Moon and Ascendant with astronomical precision, alongside your Chinese year, month, day and hour pillars."
         },
         "step3": {
           "title": "Receive your reading",
-          "body": "Your personal report is written, designed as an elegant PDF and delivered to your screen and your inbox."
+          "body": "See your free reading instantly, or download your personal six-part PDF report within minutes. We email you the link too."
         }
       },
       "plans": {
         "title": "Choose your reading",
         "free": {
-          "title": "Free reading",
-          "body": "A first glimpse: your Western sun sign and your Chinese year animal, from your birth date alone.",
-          "features": "Your Western sun sign\nYour Chinese year animal and its element\nA short reading for each\nInstant, with no payment needed"
+          "title": "Free Reading",
+          "body": "Your Western sun sign and Chinese year animal, with a reading for each. Instant, and all it takes is your birth date.",
+          "features": "Your Western sun sign\nYour Chinese zodiac animal and its element\nA ready-written reading for each\nInstant results: no account, no payment"
         },
         "paid": {
-          "title": "Full blended report",
-          "body": "Your complete portrait, calculated from your exact birth time and place and written for you alone.",
-          "features": "Sun, Moon and Ascendant\nYear, month, day and hour pillars\nSix in-depth chapters blending both traditions\nA designed PDF to download and keep\nDelivered by email within minutes"
+          "title": "Full Blended Report",
+          "body": "A personal six-part report built from your exact birth time and place, blending your Western chart with your four Chinese pillars.",
+          "features": "Sun, Moon and Ascendant from your exact birth moment\nYour BaZi year, month, day and hour pillars\nSix in-depth sections written for your chart alone\nA beautifully designed PDF, ready to download in minutes\nA private link emailed to you, active for 24 hours\nAvailable in English and Arabic"
         }
       },
       "library": {
         "title": "The Galaxy Library",
-        "body": "Book series that take you deeper into the stars, the elements and the wisdom of both traditions."
+        "body": "Our book series, where Western signs and Chinese animals meet in stories, guides and illustrated journeys. Begin with Volume One."
       },
       "blog": {
         "title": "From the journal",
-        "body": "Essays and guides on astrology, the Chinese zodiac and the art of reading both together."
+        "body": "Clear, thoughtful articles on both traditions: how charts are calculated, what the symbols mean and how to use them for reflection."
       },
       "faq": {
         "title": "Questions, answered",
-        "q1": "What is Zodiac Blend?",
-        "a1": "Zodiac Blend combines Western astrology and the Chinese zodiac into a single reading. Instead of choosing one tradition, you see how both describe you, and where they meet.",
-        "q2": "What is the difference between the free reading and the full report?",
-        "a2": "The free reading uses only your birth date to find your Western sun sign and your Chinese year animal. The full report uses your exact birth time and city to calculate your Sun, Moon, Ascendant and all four Chinese pillars, then explores them in six personal chapters.",
-        "q3": "Why do you need my birth time and city?",
-        "a3": "The Moon moves quickly and the Ascendant changes about every two hours, and both depend on where you were born. Your hour pillar in the Chinese system also depends on the time. The more precise your details, the more precise your report.",
-        "q4": "What if I don't know my exact birth time?",
-        "a4": "Enter the closest time you know. Your sun sign and your year, month and day pillars will still be accurate, but the Ascendant and the hour pillar may differ.",
-        "q5": "How and when will I receive my report?",
-        "a5": "Once your payment is confirmed, your report is prepared, usually within a few minutes. You can download it from your order page, and we also email you a private link. The link stays valid for 24 hours, so remember to save your PDF.",
-        "q6": "Is my personal data safe?",
-        "a6": "We use your details only to calculate and deliver your reading. Payments are handled by our secure payment provider, so we never see your card details, and birth data is deleted after a limited period."
+        "q1": "How exact does my birth time need to be?",
+        "a1": "As exact as you can make it. Your Ascendant changes sign roughly every two hours, the Moon moves about half a degree an hour, and the Chinese hour pillar changes every two hours. Your birth certificate or hospital record is the best source. If you only know an approximate time, enter your best estimate: your sun sign and your year, month and day pillars will usually stay the same, but your Ascendant and hour pillar may differ.",
+        "q2": "Why do you need my city of birth?",
+        "a2": "Your Ascendant depends on where on Earth you were born, so we use your city's latitude and longitude. Your city also tells us its time zone and its historical daylight-saving rules, which we need to convert your local birth time into the exact astronomical moment.",
+        "q3": "Why might my Chinese animal differ from other websites?",
+        "a3": "The Chinese year does not begin on 1 January. Popular calendars change the animal at Chinese New Year, between late January and mid-February, while BaZi uses Lichun, the 'Start of Spring', around 4 February. We follow the Lichun convention, so if you were born in January or early February your animal may belong to the previous year. We let you know when your birthday falls right on the boundary.",
+        "q4": "What happens to my personal data?",
+        "a4": "We use your birth details only to calculate your chart and write your reading. Your report is written with the help of Google's Gemini AI, which receives your calculated chart but never your email address. Birth details are deleted after 30 days, there is no account to create, and we send marketing emails only if you opt in.",
+        "q5": "How long can I download my report?",
+        "a5": "Your report is usually ready within a few minutes of payment. You can download it straight away from your order page, and we email you a private link as well. The link stays active for 24 hours, after which the file is permanently deleted, so save the PDF to your device.",
+        "q6": "Which languages are available?",
+        "a6": "Zodiac Blend is available in English and Arabic. Your full report is written entirely in the language you choose, from the section titles to the very last line."
       },
       "cta": {
-        "title": "Your two skies are waiting",
-        "body": "Start with a free reading in seconds, or go deeper with your full blended report."
+        "title": "Meet the whole of you",
+        "body": "Start with a free reading in seconds, or go deeper with a full report crafted from the exact moment and place you were born."
       }
     },
     "free": {
       "intro": {
         "title": "Your free reading",
-        "body": "Enter your birth date to discover your Western sun sign and your Chinese year animal."
+        "body": "Enter your birth date, email and preferred language to discover your Western sun sign and Chinese zodiac animal, with a reading for each, right away."
       }
     },
     "reading": {
       "intro": {
         "title": "Your full blended report",
-        "body": "Tell us when and where you were born. We'll calculate both charts with precision and write your personal report."
+        "body": "A reading that is truly yours starts with the exact moment and place of your birth. From them we calculate your Sun, Moon and Ascendant and your four Chinese pillars, then craft a personal six-part report you can download as soon as it is ready."
       },
-      "includes": "Your Sun, Moon and Ascendant\nYour four Chinese pillars: year, month, day and hour\nSix chapters blending both traditions\nAn elegantly designed PDF, yours to keep",
-      "privacy_note": "Your birth details are used only to prepare your report and are never shared."
+      "includes": "Your Core Nature: your Sun sign meets your year animal\nYour Inner World: your Moon sign and month pillar\nHow You Meet the World: your Ascendant and hour pillar\nLove & Relationships: how you connect and what you seek\nWork, Purpose & Day Master: your strengths and calling\nYour Blended Path: the one truth both traditions share",
+      "privacy_note": "Your birth details are used only to calculate your chart and are deleted after 30 days. Your email address is never shared with the AI that helps write your report."
     },
     "offers": {
       "intro": {
-        "title": "Offers",
-        "body": "Seasonal offers and special codes for your next reading."
+        "title": "Current offers",
+        "body": "Special offers on Zodiac Blend reports. Enter the code when you order your full report; each offer shows its own dates and conditions."
       }
     },
     "library": {
       "intro": {
-        "title": "The Galaxy Library",
-        "body": "Book series to explore the stars and the wisdom of both traditions."
+        "title": "Galaxy Library",
+        "body": "The Galaxy Library is the Zodiac Blend book series: stories and guides in which the signs of the Western sky meet the animals of the Chinese calendar. Explore the collection as it grows."
       }
     },
     "blog": {
       "intro": {
-        "title": "The Journal",
-        "body": "Essays, guides and stories from the world of astrology and the Chinese zodiac."
+        "title": "The Zodiac Blend Journal",
+        "body": "Articles on Western astrology, the Chinese zodiac and BaZi, written to help you understand your chart and use it for reflection."
       }
     },
     "legal": {
-      "disclaimer": "Readings are offered for reflection and entertainment and are not a substitute for professional advice.",
+      "disclaimer": "Zodiac Blend readings are offered for self-reflection and entertainment. They are not a substitute for professional medical, psychological, legal or financial advice.",
       "privacy": {
         "body": "Our privacy policy is temporarily unavailable. Please try again shortly, or write to us at info@zodiacblend.com."
       },
@@ -386,11 +387,11 @@
       }
     },
     "contact": {
-      "body": "We'd love to hear from you.\n\nWrite to us at info@zodiacblend.com or call +1-307-443-6533."
+      "body": "We would love to hear from you, whether you have a question about your reading, need help with an order or simply want to share how your report resonated.\n\nEmail: info@zodiacblend.com\nPhone: +1-307-443-6533\nAddress: Zodiac Blend LLC, 2106 House Ave, Suite 581, Cheyenne, Wyoming 82001, USA\n\nFor questions about an order, please write from the email address you used and include your order number. Never send us your download link: we will never ask for it."
     },
     "company": {
       "name": "Zodiac Blend LLC",
-      "address": "2106 House Ave Suite 581, Cheyenne, Wyoming 82001",
+      "address": "2106 House Ave, Suite 581, Cheyenne, Wyoming 82001, USA",
       "phone": "+1-307-443-6533",
       "email": "info@zodiacblend.com"
     },
@@ -399,8 +400,8 @@
     },
     "seo": {
       "home": {
-        "title": "Zodiac Blend | Western Astrology & Chinese Zodiac Readings",
-        "description": "Blend Western astrology and the Chinese zodiac in one reading. Get your free sun sign and year animal, or a full personal report with your Sun, Moon, Ascendant and BaZi pillars."
+        "title": "Zodiac Blend | Western & Chinese Astrology Readings",
+        "description": "Discover your sun sign and Chinese zodiac animal for free, or get a personal PDF report blending your Sun, Moon, Ascendant and BaZi pillars."
       }
     }
   }

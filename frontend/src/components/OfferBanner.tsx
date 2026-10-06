@@ -6,13 +6,11 @@ import { Container } from "@/components/ui/Container";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { Link } from "@/i18n/navigation";
 import { apiGet } from "@/lib/api/server";
+import { CACHE_TAGS } from "@/lib/api/tags";
 import { formatDate, isExternalUrl } from "@/lib/format";
 import { toSiteHref } from "@/lib/links";
 import type { ItemsResponse, OfferOut } from "@/lib/types";
 import { CopyCode, DismissibleOffer } from "./OfferBannerClient";
-
-/** Cache tag of GET /offers. */
-export const OFFERS_TAG = "offers";
 
 export interface OfferBannerProps {
   /**
@@ -39,7 +37,7 @@ export async function OfferBanner({ variant = "bar" }: OfferBannerProps) {
     locale,
     query: { banner: true },
     revalidate: 60,
-    tags: [OFFERS_TAG],
+    tags: [CACHE_TAGS.offers],
   });
   const offer = data?.items?.find((item) => item.show_banner) ?? data?.items?.[0];
   if (!offer) return null;
@@ -63,13 +61,20 @@ export async function OfferBanner({ variant = "bar" }: OfferBannerProps) {
     const barLinkClass =
       "inline-flex items-center gap-1 font-semibold text-gold-light underline-offset-4 hover:underline";
     return (
-      <DismissibleOffer offerId={offer.id} dismissLabel={t("dismiss")} buttonClassName="top-1/2 -translate-y-1/2 end-1 sm:end-3">
+      <DismissibleOffer
+        offerId={offer.id}
+        dismissLabel={t("dismiss")}
+        buttonClassName="top-1/2 -translate-y-1/2 end-1 sm:end-3"
+      >
         <aside
           data-tone="night"
           aria-label={t("label")}
           className="border-b border-gold-light/20 bg-night-2 text-ivory"
         >
-          <Container size="wide" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-2.5 pe-12 text-center text-sm sm:pe-14">
+          <Container
+            size="wide"
+            className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-2.5 pe-12 text-center text-sm sm:pe-14"
+          >
             <span className="inline-flex items-center gap-2">
               <Sparkle className="size-3.5 text-gold-light" />
               <span className="eyebrow">{t("label")}</span>
@@ -96,7 +101,11 @@ export async function OfferBanner({ variant = "bar" }: OfferBannerProps) {
   return (
     <section aria-label={t("label")} data-tone="ivory" className="bg-ivory pb-4 sm:pb-8">
       <Container>
-        <DismissibleOffer offerId={offer.id} dismissLabel={t("dismiss")} buttonClassName="top-3 end-3">
+        <DismissibleOffer
+          offerId={offer.id}
+          dismissLabel={t("dismiss")}
+          buttonClassName="top-3 end-3"
+        >
           <div
             data-tone="night"
             className="relative isolate overflow-hidden rounded-3xl border border-gold-light/30 bg-night-sky shadow-glow"
@@ -128,7 +137,13 @@ export async function OfferBanner({ variant = "bar" }: OfferBannerProps) {
               </div>
               {offer.image_url ? (
                 <div className="relative mx-auto aspect-square w-48 overflow-hidden rounded-2xl border border-gold-light/30 sm:w-56">
-                  <MediaImage src={offer.image_url} alt="" fill sizes="224px" className="object-cover" />
+                  <MediaImage
+                    src={offer.image_url}
+                    alt=""
+                    fill
+                    sizes="224px"
+                    className="object-cover"
+                  />
                 </div>
               ) : null}
             </div>

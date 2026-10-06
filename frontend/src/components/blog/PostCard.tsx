@@ -17,7 +17,12 @@ export interface PostCardProps {
 export function PostCard({ post, locale, readLabel, headingLevel: H = "h3" }: PostCardProps) {
   const date = formatDate(post.published_at, locale, { dateStyle: "medium" });
   return (
-    <Card as="article" padding="none" interactive className="group flex h-full flex-col overflow-hidden">
+    <Card
+      as="article"
+      padding="none"
+      interactive
+      className="group flex h-full flex-col overflow-hidden"
+    >
       <div className="relative aspect-[16/10] overflow-hidden bg-night-sky">
         {post.cover_image_url ? (
           <MediaImage
@@ -48,8 +53,12 @@ export function PostCard({ post, locale, readLabel, headingLevel: H = "h3" }: Po
             {readLabel ? <span className="sr-only"> — {readLabel}</span> : null}
           </Link>
         </H>
-        {post.excerpt ? <p className="mt-3 line-clamp-3 leading-relaxed text-muted">{post.excerpt}</p> : null}
-        {post.author_name ? <p className="mt-auto pt-5 text-sm text-muted">{post.author_name}</p> : null}
+        {post.excerpt ? (
+          <p className="mt-3 line-clamp-3 leading-relaxed text-muted">{post.excerpt}</p>
+        ) : null}
+        {post.author_name ? (
+          <p className="mt-auto pt-5 text-sm text-muted">{post.author_name}</p>
+        ) : null}
       </div>
     </Card>
   );

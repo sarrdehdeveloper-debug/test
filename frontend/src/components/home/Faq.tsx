@@ -40,7 +40,14 @@ export async function Faq({ content: c }: { content: SiteContentAccessor }) {
                 aria-hidden="true"
                 className="grid size-9 shrink-0 place-items-center rounded-full border border-gold/40 text-ornament transition-transform duration-300 group-open:rotate-45"
               >
-                <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                <svg
+                  viewBox="0 0 20 20"
+                  className="size-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                >
                   <path d="M10 4v12M4 10h12" />
                 </svg>
               </span>

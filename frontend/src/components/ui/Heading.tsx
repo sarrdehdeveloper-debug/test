@@ -48,20 +48,11 @@ export function Heading({
   return (
     <header className={cn(wrapper, className)}>
       {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
-      <Tag
-        id={id}
-        className={cn("font-serif leading-[1.1] font-semibold text-fg", SIZES[size])}
-      >
+      <Tag id={id} className={cn("font-serif leading-[1.1] font-semibold text-fg", SIZES[size])}>
         {title}
       </Tag>
-      {ornament ? (
-        <Ornament className={cn("mt-5 h-4 w-40 text-ornament", block)} />
-      ) : null}
-      {lead ? (
-        <p className={cn("mt-5 max-w-2xl text-lg text-muted", block)}>
-          {lead}
-        </p>
-      ) : null}
+      {ornament ? <Ornament className={cn("mt-5 h-4 w-40 text-ornament", block)} /> : null}
+      {lead ? <p className={cn("mt-5 max-w-2xl text-lg text-muted", block)}>{lead}</p> : null}
     </header>
   );
 }

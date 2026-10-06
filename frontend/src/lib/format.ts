@@ -25,7 +25,9 @@ export function formatDate(
   const date = typeof value === "string" ? new Date(value) : value;
   if (Number.isNaN(date.getTime())) return "";
   try {
-    return new Intl.DateTimeFormat(intlLocale(locale), { timeZone: "UTC", ...options }).format(date);
+    return new Intl.DateTimeFormat(intlLocale(locale), { timeZone: "UTC", ...options }).format(
+      date,
+    );
   } catch {
     return date.toISOString().slice(0, 10);
   }

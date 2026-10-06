@@ -85,12 +85,7 @@ export interface ApiErrorBody {
 }
 
 export type DiscountErrorReason =
-  | "not_found"
-  | "inactive"
-  | "not_started"
-  | "expired"
-  | "exhausted"
-  | "currency_mismatch";
+  "not_found" | "inactive" | "not_started" | "expired" | "exhausted" | "currency_mismatch";
 
 export interface AmbiguousTimeOption {
   fold: 0 | 1;

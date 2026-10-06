@@ -418,4 +418,10 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Progress indicators must still show progress: a slow, steady rotation. */
+  [data-spinner] {
+    animation-duration: 2.4s !important;
+    animation-iteration-count: infinite !important;
+  }
 }

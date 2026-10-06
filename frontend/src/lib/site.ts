@@ -1,3 +1,6 @@
+/** Brand name (Latin in every locale, like the logo wordmark). */
+export const SITE_NAME = "Zodiac Blend";
+
 /** Public site URL (absolute links, Open Graph, sitemap). Set SITE_URL in production. */
 export function siteUrl(): string {
   return (process.env.SITE_URL || "http://localhost:3000").replace(/\/+$/, "");

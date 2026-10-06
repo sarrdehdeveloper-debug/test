@@ -2,12 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useCallback } from "react";
-import {
-  discountErrorReason,
-  isApiError,
-  localizedErrorCode,
-  suggestedTime,
-} from "./errors";
+import { discountErrorReason, isApiError, localizedErrorCode, suggestedTime } from "./errors";
 
 /**
  * Returns `(error) => localized message` for anything thrown by the client API helper.

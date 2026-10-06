@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LOCALE_META, routing, isAppLocale } from "@/i18n/routing";
+import { SITE_NAME } from "./site";
 
 export const OG_IMAGE = { url: "/brand/og-image.png", width: 1200, height: 630 } as const;
 
@@ -49,6 +50,8 @@ export function pageMetadata(input: PageMetadataInput): Metadata {
     description,
     alternates: { canonical: localizedPath(locale, path), languages },
     openGraph: {
+      // Page-level openGraph replaces the layout's object, so repeat the site name here.
+      siteName: SITE_NAME,
       type,
       title: ogTitle,
       description,
@@ -57,7 +60,12 @@ export function pageMetadata(input: PageMetadataInput): Metadata {
       alternateLocale: locales.filter((l) => l !== locale).map((l) => LOCALE_META[l].og),
       images: ogImages,
     },
-    twitter: { card: "summary_large_image", title: ogTitle, description, images: ogImages.map((i) => i.url) },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description,
+      images: ogImages.map((i) => i.url),
+    },
     ...(noIndex ? { robots: { index: false, follow: false } } : {}),
   };
 }

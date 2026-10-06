@@ -11,7 +11,10 @@ import type { ReactNode } from "react";
 function Medallion({ children }: { children: ReactNode }) {
   return (
     <div className="relative mx-auto grid size-20 place-items-center rounded-full border border-gold/40 bg-[radial-gradient(circle_at_30%_25%,rgb(233_199_123/0.35),transparent_70%)] text-ornament">
-      <span className="absolute inset-1.5 rounded-full border border-dashed border-gold/30" aria-hidden="true" />
+      <span
+        className="absolute inset-1.5 rounded-full border border-dashed border-gold/30"
+        aria-hidden="true"
+      />
       {children}
     </div>
   );
@@ -23,7 +26,10 @@ export async function Traditions({ content: c }: { content: SiteContentAccessor 
     {
       key: "western",
       icon: (
-        <span aria-hidden="true" className="font-[family-name:var(--font-symbol)] text-[2.4rem] leading-none text-gold">
+        <span
+          aria-hidden="true"
+          className="font-[family-name:var(--font-symbol)] text-[2.4rem] leading-none text-gold"
+        >
           {SIGN_GLYPHS.leo}
         </span>
       ),

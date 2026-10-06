@@ -17,19 +17,37 @@ const TICKS = Array.from({ length: 72 }, (_, i) => {
   return { a: polar(major ? 276 : 283, angle), b: polar(290, angle), major };
 });
 
-const SIGNS = WESTERN_SIGNS.map((sign, i) => ({ glyph: SIGN_GLYPHS[sign], angle: i * 30 + 15, ...polar(256, i * 30 + 15) }));
-const ANIMALS = CHINESE_ANIMALS.map((animal, i) => ({ char: ANIMAL_CHARS[animal], angle: i * 30, ...polar(205, i * 30) }));
+const SIGNS = WESTERN_SIGNS.map((sign, i) => ({
+  glyph: SIGN_GLYPHS[sign],
+  angle: i * 30 + 15,
+  ...polar(256, i * 30 + 15),
+}));
+const ANIMALS = CHINESE_ANIMALS.map((animal, i) => ({
+  char: ANIMAL_CHARS[animal],
+  angle: i * 30,
+  ...polar(205, i * 30),
+}));
 const DOTS = Array.from({ length: 12 }, (_, i) => polar(205, i * 30 + 15));
 
 /**
  * Decorative astrolabe: an outer ring of the 12 Western glyphs and a counter-rotating inner ring of
  * the 12 Chinese animals around the brand emblem — the two traditions around one centre.
  */
-export function ZodiacWheel({ className, priority = true }: { className?: string; priority?: boolean }) {
+export function ZodiacWheel({
+  className,
+  priority = true,
+}: {
+  className?: string;
+  priority?: boolean;
+}) {
   return (
     <div className={cn("relative aspect-square select-none", className)} aria-hidden="true">
       <div className="absolute inset-[12%] rounded-full bg-[radial-gradient(circle,rgb(199_137_51/0.35)_0%,rgb(199_137_51/0.08)_45%,transparent_70%)] blur-xl" />
-      <svg viewBox="0 0 600 600" className="absolute inset-0 h-full w-full overflow-visible" focusable="false">
+      <svg
+        viewBox="0 0 600 600"
+        className="absolute inset-0 h-full w-full overflow-visible"
+        focusable="false"
+      >
         <defs>
           <linearGradient id="zw-gold" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#E9C77B" />
@@ -40,7 +58,15 @@ export function ZodiacWheel({ className, priority = true }: { className?: string
 
         <g className="animate-orbit [transform-origin:300px_300px]">
           <circle cx={C} cy={C} r={291} fill="none" stroke="url(#zw-gold)" strokeWidth="1.4" />
-          <circle cx={C} cy={C} r={226} fill="none" stroke="url(#zw-gold)" strokeWidth="1" strokeOpacity="0.8" />
+          <circle
+            cx={C}
+            cy={C}
+            r={226}
+            fill="none"
+            stroke="url(#zw-gold)"
+            strokeWidth="1"
+            strokeOpacity="0.8"
+          />
           {TICKS.map((t, i) => (
             <line
               key={i}
@@ -56,7 +82,18 @@ export function ZodiacWheel({ className, priority = true }: { className?: string
           {Array.from({ length: 12 }, (_, i) => {
             const a = polar(229, i * 30);
             const b = polar(276, i * 30);
-            return <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#C78933" strokeOpacity="0.35" strokeWidth="0.8" />;
+            return (
+              <line
+                key={i}
+                x1={a.x}
+                y1={a.y}
+                x2={b.x}
+                y2={b.y}
+                stroke="#C78933"
+                strokeOpacity="0.35"
+                strokeWidth="0.8"
+              />
+            );
           })}
           {SIGNS.map((s) => (
             <text
@@ -76,7 +113,16 @@ export function ZodiacWheel({ className, priority = true }: { className?: string
         </g>
 
         <g className="animate-orbit-reverse [transform-origin:300px_300px]">
-          <circle cx={C} cy={C} r={184} fill="none" stroke="#C78933" strokeOpacity="0.55" strokeWidth="0.8" strokeDasharray="2 6" />
+          <circle
+            cx={C}
+            cy={C}
+            r={184}
+            fill="none"
+            stroke="#C78933"
+            strokeOpacity="0.55"
+            strokeWidth="0.8"
+            strokeDasharray="2 6"
+          />
           {ANIMALS.map((a) => (
             <text
               key={a.angle}

@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { apiGet } from "./api/server";
+import { CACHE_TAGS } from "./api/tags";
 import type { PublicConfig } from "./types";
 
 /** Used when GET /public-config is unavailable (keep in sync with backend settings defaults). */
@@ -14,12 +15,12 @@ export const DEFAULT_PUBLIC_CONFIG: PublicConfig = {
 };
 
 /** Public business settings (price, currency, access window...). Never null: falls back to defaults. */
-export const getPublicConfig = cache(
-  async (): Promise<PublicConfig & { fromApi: boolean }> => {
-    const data = await apiGet<PublicConfig>("/public-config", {
-      revalidate: 300,
-      tags: ["public-config"],
-    });
-    return data ? { ...DEFAULT_PUBLIC_CONFIG, ...data, fromApi: true } : { ...DEFAULT_PUBLIC_CONFIG, fromApi: false };
-  },
-);
+export const getPublicConfig = cache(async (): Promise<PublicConfig & { fromApi: boolean }> => {
+  const data = await apiGet<PublicConfig>("/public-config", {
+    revalidate: 300,
+    tags: [CACHE_TAGS.publicConfig],
+  });
+  return data
+    ? { ...DEFAULT_PUBLIC_CONFIG, ...data, fromApi: true }
+    : { ...DEFAULT_PUBLIC_CONFIG, fromApi: false };
+});
