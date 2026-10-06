@@ -62,6 +62,8 @@ def post_summary_out(post: BlogPost, locale: str) -> PostSummaryOut:
         cover_image_url=post.cover_image_url,
         author_name=post.author_name,
         published_at=post.published_at,
+        updated_at=post.updated_at,
+        available_locales=titled_locales(post.translations),
     )
 
 
@@ -69,10 +71,9 @@ def post_out(post: BlogPost, locale: str) -> PostOut:
     text = localized(post.translations, locale)
     return PostOut(
         **post_summary_out(post, locale).model_dump(),
-        body_html=render_markdown(str(text.get("body") or "")),
+        body_html=render_markdown(str(text.get("body") or ""), allow_images=True),
         seo_title=text_or_none(text.get("seo_title")),
         seo_description=text_or_none(text.get("seo_description")),
-        available_locales=titled_locales(post.translations),
     )
 
 

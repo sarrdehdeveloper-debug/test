@@ -297,7 +297,16 @@ def test_blog_lists_published_only_newest_first(client, db):
     body = r.json()
     assert [p["slug"] for p in body["items"]] == ["new", "old"]
     assert (body["total"], body["page"], body["page_size"]) == (2, 1, 9)
-    assert set(body["items"][0]) == {"slug", "title", "excerpt", "cover_image_url", "author_name", "published_at"}
+    assert set(body["items"][0]) == {
+        "slug",
+        "title",
+        "excerpt",
+        "cover_image_url",
+        "author_name",
+        "published_at",
+        "updated_at",
+        "available_locales",
+    }
     assert r.headers["cache-control"] == "public, max-age=60"
 
 

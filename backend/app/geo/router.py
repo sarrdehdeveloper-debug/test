@@ -8,8 +8,9 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 from sqlalchemy.orm import Session
 
 from app.db import get_db
+from app.errors import not_found
 from app.geo import service
-from app.geo.schemas import CityList, CitySearchQuery, CountryList, LocaleQuery
+from app.geo.schemas import CityList, CityOut, CitySearchQuery, CountryList, LocaleQuery
 from app.ratelimit import limiter
 from app.utils import client_ip, normalize_locale
 
@@ -39,3 +40,16 @@ def get_cities(
     items = service.search_cities(db, params.country, params.q, params.limit, normalize_locale(params.locale))
     response.headers["Cache-Control"] = _CACHE_CONTROL
     return CityList(items=items)
+
+
+@router.get("/cities/{city_id}", response_model=CityOut)
+def get_city(
+    city_id: int, params: Annotated[LocaleQuery, Query()], request: Request, response: Response, db: DbSession
+) -> CityOut:
+    """One city by GeoNames id (e.g. to show a preselected capital without a search)."""
+    limiter.hit(f"geo-cities:{client_ip(request)}", _CITY_SEARCH_LIMIT, _CITY_SEARCH_WINDOW_SECONDS)
+    city = service.get_city_out(db, city_id, normalize_locale(params.locale))
+    if city is None:
+        raise not_found("city")
+    response.headers["Cache-Control"] = _CACHE_CONTROL
+    return city

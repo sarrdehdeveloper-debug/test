@@ -158,13 +158,14 @@ class PostSummaryOut(BaseModel):
     cover_image_url: str | None
     author_name: str
     published_at: datetime | None
+    updated_at: datetime
+    available_locales: list[str]
 
 
 class PostOut(PostSummaryOut):
     body_html: str
     seo_title: str | None
     seo_description: str | None
-    available_locales: list[str]
 
 
 class BookOut(BaseModel):

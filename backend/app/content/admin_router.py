@@ -451,7 +451,7 @@ def delete_media(media_id: EntityId, request: Request, user: Editor, db: Db) -> 
 
 @router.post("/markdown/preview")
 def preview_markdown(body: MarkdownPreviewIn, _user: Editor) -> HtmlOut:
-    return HtmlOut(html=render_markdown(body.markdown))
+    return HtmlOut(html=render_markdown(body.markdown, allow_images=True))
 
 
 # ---------------------------------------------------------------------------

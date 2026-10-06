@@ -645,3 +645,16 @@ def test_is_valid_timezone():
     assert not importer.is_valid_timezone("")
     assert not importer.is_valid_timezone("Mars/Olympus_Mons")
     assert not importer.is_valid_timezone("../../etc/passwd")
+
+
+def test_get_city_by_id(client, sample_geo):
+    response = client.get("/api/v1/geo/cities/360630?locale=ar")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["id"] == 360630 and body["timezone"] == "Africa/Cairo" and body["is_capital"] is True
+    assert "مصر" in body["label"]
+    assert response.headers["cache-control"] == "public, max-age=86400"
+
+
+def test_get_city_by_id_unknown(client, sample_geo):
+    assert client.get("/api/v1/geo/cities/999999999").status_code == 404
