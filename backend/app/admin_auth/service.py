@@ -11,7 +11,6 @@ import functools
 import hmac
 import math
 import secrets
-import threading
 import unicodedata
 from datetime import datetime, timedelta
 from typing import Any, NoReturn, cast
@@ -101,30 +100,6 @@ def _record_failure_and_raise(db: Session, email: str, ip: str | None, now: date
 # ---------------------------------------------------------------------------
 
 
-class _TotpReplayGuard:
-    """Remembers the last accepted time step per user so a code cannot be reused within its window.
-
-    In-process only: with several API processes a replay is still bounded by the ~90 s validity window.
-    Keyed by a fingerprint of the secret as well, so re-enrolment (or a reused user id) starts fresh.
-    """
-
-    def __init__(self) -> None:
-        self._lock = threading.Lock()
-        self._last_step: dict[int, tuple[str, int]] = {}
-
-    def accept(self, user_id: int, secret: str, step: int) -> bool:
-        fingerprint = hash_token(secret)
-        with self._lock:
-            previous = self._last_step.get(user_id)
-            if previous is not None and previous[0] == fingerprint and step <= previous[1]:
-                return False
-            self._last_step[user_id] = (fingerprint, step)
-            return True
-
-
-_replay_guard = _TotpReplayGuard()
-
-
 def _is_blank(code: str | None) -> bool:
     return code is None or not code.strip()
 
@@ -154,15 +129,26 @@ def _matching_totp_step(secret: str, code: str, now: datetime) -> int | None:
     return matched
 
 
-def verify_totp(user_id: int, secret: str, code: str | None, now: datetime | None = None) -> bool:
-    """Check a TOTP code (±1 step) and consume it so the same code cannot be replayed."""
+def verify_totp(db: Session, user: AdminUser, secret: str, code: str | None, now: datetime | None = None) -> bool:
+    """Check a TOTP code (±1 step) and consume it so the same code cannot be replayed.
+
+    The last accepted step is stored on the user row (locked for the check), so a code cannot be
+    reused even when several API processes serve logins.
+    """
     if code is None:
         return False
     cleaned = _clean_totp_code(code)
     if cleaned is None:
         return False
     step = _matching_totp_step(secret, cleaned, now or utcnow())
-    return step is not None and _replay_guard.accept(user_id, secret, step)
+    if step is None:
+        return False
+    db.refresh(user, with_for_update=True)
+    if user.totp_last_used_step is not None and step <= user.totp_last_used_step:
+        return False
+    user.totp_last_used_step = step
+    db.flush()
+    return True
 
 
 # ---------------------------------------------------------------------------
@@ -217,7 +203,7 @@ def authenticate(db: Session, *, email: str, password: str, totp_code: str | Non
     if user.totp_secret:
         if _is_blank(totp_code):
             raise ApiError(401, "mfa_required", "Enter the code from your authenticator app")
-        if not verify_totp(user.id, user.totp_secret, totp_code, now):
+        if not verify_totp(db, user, user.totp_secret, totp_code, now):
             _record_failure_and_raise(db, email, ip, now, ApiError(401, "invalid_mfa_code", "Invalid MFA code"))
     record_login_attempt(db, email, ip, success=True, now=now)
     if password_needs_rehash(user.password_hash):
@@ -251,6 +237,7 @@ def start_mfa_setup(db: Session, user: AdminUser) -> tuple[str, str]:
         raise ApiError(409, "mfa_already_enabled", "MFA is already enabled; disable it first to re-enrol")
     secret = pyotp.random_base32()
     user.totp_pending_secret = secret
+    user.totp_last_used_step = None  # steps of a previous secret must not block the new one
     db.flush()
     otpauth_url = pyotp.TOTP(secret, digits=TOTP_DIGITS).provisioning_uri(name=user.email, issuer_name=TOTP_ISSUER)
     return secret, otpauth_url
@@ -261,7 +248,7 @@ def enable_mfa(db: Session, user: AdminUser, *, code: str, ip: str | None) -> No
         raise ApiError(409, "mfa_already_enabled", "MFA is already enabled")
     if not user.totp_pending_secret:
         raise ApiError(409, "mfa_setup_required", "Start MFA setup first")
-    if not verify_totp(user.id, user.totp_pending_secret, code):
+    if not verify_totp(db, user, user.totp_pending_secret, code):
         raise _invalid_field("invalid_mfa_code", "code", "Invalid MFA code")
     user.totp_secret = user.totp_pending_secret
     user.totp_pending_secret = None
@@ -277,7 +264,7 @@ def disable_mfa(db: Session, user: AdminUser, *, password: str, code: str, ip: s
     if not verify_password(password, user.password_hash):
         error = _invalid_field("invalid_password", "password", "Password is incorrect")
         _record_failure_and_raise(db, user.email, ip, now, error)
-    if not verify_totp(user.id, user.totp_secret, code, now):
+    if not verify_totp(db, user, user.totp_secret, code, now):
         _record_failure_and_raise(
             db, user.email, ip, now, _invalid_field("invalid_mfa_code", "code", "Invalid MFA code")
         )

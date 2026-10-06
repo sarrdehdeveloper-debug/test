@@ -594,13 +594,20 @@ def test_mfa_disable_requires_password_and_code(client, db, make_admin, session_
     assert login(client, "off@example.com").status_code == 200  # no code needed any more
 
 
-def test_totp_replay_guard_is_per_secret():
+def test_totp_code_cannot_be_replayed_and_reenrolment_starts_fresh(db, make_admin):
+    user = make_admin("owner")
     secret_a, secret_b = pyotp.random_base32(), pyotp.random_base32()
     now = utcnow()
     code_a = pyotp.TOTP(secret_a).at(now)
     code_b = pyotp.TOTP(secret_b).at(now)
 
-    assert service.verify_totp(1, secret_a, code_a, now) is True
-    assert service.verify_totp(1, secret_a, code_a, now) is False
-    assert service.verify_totp(1, secret_b, code_b, now) is True  # re-enrolment with a new secret
-    assert service.verify_totp(1, secret_a, None, now) is False
+    assert service.verify_totp(db, user, secret_a, code_a, now) is True
+    assert service.verify_totp(db, user, secret_a, code_a, now) is False  # replay rejected
+    db.commit()
+    db.refresh(user)
+    assert user.totp_last_used_step is not None  # persisted: shared by every API process
+
+    user.totp_last_used_step = None  # what start_mfa_setup does when a new secret is enrolled
+    db.commit()
+    assert service.verify_totp(db, user, secret_b, code_b, now) is True
+    assert service.verify_totp(db, user, secret_a, None, now) is False
