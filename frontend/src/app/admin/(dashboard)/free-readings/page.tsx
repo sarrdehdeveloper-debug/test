@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { FreeReadingsView } from "./FreeReadingsView";
 
 export const metadata: Metadata = { title: "Free readings" };
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
+/** /admin/free-readings — the free plan's sign and animal readings (editors and up). */
 export default function FreeReadingsPage() {
-  return (
-    <ComingSoon
-      title="Free readings"
-      description="The 12 sign and 12 animal readings of the free plan, per language."
-      icon="readings"
-    />
-  );
+  return <FreeReadingsView />;
 }

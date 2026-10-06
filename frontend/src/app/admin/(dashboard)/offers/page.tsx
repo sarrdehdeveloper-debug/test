@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { OffersView } from "./OffersView";
 
 export const metadata: Metadata = { title: "Offers" };
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
+/** /admin/offers — list of promotions (editors and up); editing lives at /admin/offers/[id]. */
 export default function OffersPage() {
-  return (
-    <ComingSoon
-      title="Offers"
-      description="Promotions, banners and their discount codes."
-      icon="offers"
-    />
-  );
+  return <OffersView />;
 }

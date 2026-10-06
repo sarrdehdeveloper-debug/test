@@ -26,6 +26,8 @@ export interface ConfirmDialogProps {
   confirmText?: string;
   /** External loading state (if you do not return a promise). */
   loading?: boolean;
+  /** Text for a rejected `onConfirm` (default `adminErrorMessage`), e.g. to explain a 409. */
+  formatError?: (error: unknown) => string | null;
 }
 
 /**
@@ -46,6 +48,7 @@ export function ConfirmDialog({
   tone = "default",
   confirmText,
   loading = false,
+  formatError,
 }: ConfirmDialogProps) {
   const [pending, setPending] = useState(false);
   const [typed, setTyped] = useState("");
@@ -74,7 +77,7 @@ export function ConfirmDialog({
       onClose();
     } catch (err) {
       setPending(false);
-      setError(adminErrorMessage(err, { allowAbort: true }));
+      setError(formatError ? formatError(err) : adminErrorMessage(err, { allowAbort: true }));
     }
   };
 

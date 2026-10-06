@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { BlogView } from "./BlogView";
 
 export const metadata: Metadata = { title: "Blog" };
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
+/** /admin/blog — list of posts (editors and up); editing lives at /admin/blog/[id]. */
 export default function BlogPage() {
-  return (
-    <ComingSoon
-      title="Blog"
-      description="Articles in English and Arabic: drafts, scheduling and publishing."
-      icon="blog"
-    />
-  );
+  return <BlogView />;
 }

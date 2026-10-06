@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { MediaView } from "./MediaView";
 
 export const metadata: Metadata = { title: "Media" };
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
+/** /admin/media — uploaded images (editors and up). */
 export default function MediaPage() {
-  return (
-    <ComingSoon
-      title="Media"
-      description="Uploaded images used by offers, blog posts and the library."
-      icon="media"
-    />
-  );
+  return <MediaView />;
 }

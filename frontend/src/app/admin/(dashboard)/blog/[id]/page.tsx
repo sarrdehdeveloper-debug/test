@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { PostEditor } from "@/components/admin/blog/PostEditor";
 
-export const metadata: Metadata = { title: "Blog post" };
+export async function generateMetadata({
+  params,
+}: PageProps<"/admin/blog/[id]">): Promise<Metadata> {
+  const { id } = await params;
+  return { title: id === "new" ? "New blog post" : "Edit blog post" };
+}
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
-export default function BlogPostPage() {
-  return (
-    <ComingSoon
-      title="Blog post"
-      description="Edit the article, its translations and SEO."
-      icon="blog"
-      breadcrumbs={[{ label: "Blog", href: "/admin/blog" }, { label: "Blog post" }]}
-    />
-  );
+/** /admin/blog/new and /admin/blog/[id] — write, schedule and publish a post (editors and up). */
+export default async function BlogPostPage({ params }: PageProps<"/admin/blog/[id]">) {
+  const { id } = await params;
+  return <PostEditor id={id} />;
 }

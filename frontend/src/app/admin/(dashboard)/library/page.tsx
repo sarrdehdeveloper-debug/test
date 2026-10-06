@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { LibraryView } from "./LibraryView";
 
 export const metadata: Metadata = { title: "Galaxy Library" };
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
+/** /admin/library — book series and books of the Galaxy Library (editors and up). */
 export default function LibraryPage() {
-  return (
-    <ComingSoon
-      title="Galaxy Library"
-      description="Book series and books of the Galaxy Library."
-      icon="library"
-    />
-  );
+  return <LibraryView />;
 }

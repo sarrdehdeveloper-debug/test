@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { OrderDetailView } from "./OrderDetailView";
 
-export const metadata: Metadata = { title: "Order" };
+export async function generateMetadata({
+  params,
+}: PageProps<"/admin/orders/[id]">): Promise<Metadata> {
+  const { id } = await params;
+  return { title: `Order ${decodeURIComponent(id).slice(0, 8)}` };
+}
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
-export default function OrderDetailPage() {
-  return (
-    <ComingSoon
-      title="Order"
-      description="Customer, chart, generated sections, report and payment events."
-      icon="orders"
-      breadcrumbs={[{ label: "Orders", href: "/admin/orders" }, { label: "Order" }]}
-    />
-  );
+export default async function OrderDetailPage({ params }: PageProps<"/admin/orders/[id]">) {
+  const { id } = await params;
+  return <OrderDetailView id={decodeURIComponent(id)} />;
 }

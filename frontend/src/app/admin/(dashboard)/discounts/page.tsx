@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { DiscountsView } from "./DiscountsView";
 
 export const metadata: Metadata = { title: "Discounts" };
 
-/** Placeholder (keeps the navigation working) — replace this file when building the section. */
+/** /admin/discounts — discount codes (managers; editors get the "no permission" state). */
 export default function DiscountsPage() {
-  return (
-    <ComingSoon
-      title="Discounts"
-      description="Discount codes for the paid report."
-      icon="discounts"
-    />
-  );
+  return <DiscountsView />;
 }

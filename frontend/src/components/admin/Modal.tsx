@@ -76,6 +76,9 @@ export function Modal({
       aria-modal="true"
       onCancel={(event) => {
         event.preventDefault();
+        // React bubbles `cancel` through the component tree: without this, Esc in a nested modal
+        // (e.g. the media library opened from an editor dialog) would close its parent as well.
+        event.stopPropagation();
         if (dismissible) onClose();
       }}
       onClick={(event) => {
