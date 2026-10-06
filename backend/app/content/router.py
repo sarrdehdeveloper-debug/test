@@ -8,10 +8,10 @@ from fastapi import APIRouter, Depends, Path, Query, Response
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
+from app.charts.service import MIN_BIRTH_DATE
 from app.config import get_settings
 from app.content import blog, library, media, offers, site_content
 from app.content.schemas import (
-    MIN_BIRTH_DATE,
     Items,
     OfferOut,
     Page,

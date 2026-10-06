@@ -47,9 +47,13 @@ def admin_site_content(db: Session, locale: str) -> SiteContentAdminOut:
 
 
 def update_site_content(db: Session, body: SiteContentUpdate) -> list[str]:
-    """Upsert the submitted keys for one locale; returns the keys whose value changed (caller commits)."""
+    """Upsert the submitted keys for one locale; returns the keys written (caller commits).
+
+    An emptied value is stored as "" and the row is never deleted: the seed runs on every deploy and
+    only inserts missing rows, so a deleted row would bring the default text back.
+    """
     current = _values(db, {body.locale})
-    changed = sorted(key for key, value in body.items.items() if current.get((key, body.locale), "") != value)
+    changed = sorted(key for key, value in body.items.items() if current.get((key, body.locale)) != value)
     if not changed:
         return []
     stmt = pg_insert(SiteContent).values(

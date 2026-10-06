@@ -149,12 +149,10 @@ class SiteContentUpdate(_Input):
 
 
 class FreeReadingIn(_Input):
-    title: Annotated[
-        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=300), AfterValidator(reject_nul)
-    ]
-    body: Annotated[
-        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=20_000), AfterValidator(reject_nul)
-    ]
+    # Empty strings are allowed and stored as "" (never deleted, or the deploy-time seed would restore
+    # the default); the free plan treats an empty body as untranslated and falls back.
+    title: Annotated[str, StringConstraints(strip_whitespace=True, max_length=300), AfterValidator(reject_nul)]
+    body: Annotated[str, StringConstraints(strip_whitespace=True, max_length=20_000), AfterValidator(reject_nul)]
 
 
 class FreeReadingOut(BaseModel):

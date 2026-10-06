@@ -15,7 +15,6 @@ from pydantic import AfterValidator, BaseModel, Field, StringConstraints
 from app.utils import supported_locales
 
 MAX_DB_ID = 2**63 - 1  # BIGINT primary keys
-MIN_BIRTH_DATE = date(1900, 1, 1)
 
 _SLUG_RE = re.compile(r"[a-z0-9-]{2,120}")
 _POST_SLUG_RE = re.compile(r"[a-z0-9-]{2,160}")  # blog_posts.slug is VARCHAR(160)
