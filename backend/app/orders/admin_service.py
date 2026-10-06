@@ -36,7 +36,7 @@ from app.orders.schemas import (
     Progress,
     WindowCounts,
 )
-from app.orders.service import birth_time_label, chart_signs, is_download_available, parse_order_id
+from app.orders.service import birth_time_label, chart_signs, is_download_available, nested_str, parse_order_id
 from app.payments.service import generate_report_dedupe_key
 from app.settings_store import get_setting
 from app.utils import utcnow
@@ -121,7 +121,6 @@ def order_detail(db: Session, order: Order) -> AdminOrderDetail:
     code = db.scalar(select(DiscountCode.code).where(DiscountCode.id == order.discount_code_id))
     report = db.scalar(select(Report).where(Report.order_id == order.id))
     chart: dict[str, Any] = order.chart or {}
-    chinese = chart.get("chinese") if isinstance(chart.get("chinese"), dict) else {}
     warnings = chart.get("warnings")
     return AdminOrderDetail(
         **order_item(order, code).model_dump(),
@@ -147,8 +146,8 @@ def order_detail(db: Session, order: Order) -> AdminOrderDetail:
             calc_version=order.calc_version,
             signs=chart_signs(chart),
             warnings=[w for w in warnings if isinstance(w, str)] if isinstance(warnings, list) else [],
-            year_boundary=chinese.get("year_boundary"),
-            day_boundary=chinese.get("day_boundary"),
+            year_boundary=nested_str(chart, "chinese", "year_boundary"),
+            day_boundary=nested_str(chart, "chinese", "day_boundary"),
         ),
         sections=[_section_out(s) for s in _sections(db, order.id)],
         report=_report_out(report) if report is not None else None,
@@ -325,21 +324,36 @@ def extend_access(db: Session, order: Order, hours: int) -> datetime:
 
 
 def retry_job(db: Session, job_id: int) -> Job:
-    """Put a failed job back in the queue. A generate job also re-queues its failed order."""
-    job = db.scalar(select(Job).where(Job.id == job_id).with_for_update())
+    """Put a failed job back in the queue. A generate job also re-queues its failed order.
+
+    Locks the order before the job, the same order as ``retry_generation``, so the two admin
+    actions cannot deadlock each other.
+    """
+    job = db.get(Job, job_id)
     if job is None:
         raise ApiError(404, "not_found", "job not found")
-    if job.status != JobStatus.FAILED:
+    order = _generation_order(db, job)
+    job = db.scalar(select(Job).where(Job.id == job_id).with_for_update().execution_options(populate_existing=True))
+    if job is None or job.status != JobStatus.FAILED:
         raise ApiError(409, "job_not_failed", "Only failed jobs can be retried")
     reset_job(job, utcnow())
-    if job.kind == GENERATE_REPORT:
-        order_id = parse_order_id(str((job.payload or {}).get("order_id")))
-        order = db.get(Order, order_id, with_for_update=True) if order_id is not None else None
-        if order is not None and order.status == OrderStatus.GENERATION_FAILED:
-            order.status = OrderStatus.QUEUED
-            order.last_error = None
+    if order is not None and order.status == OrderStatus.GENERATION_FAILED:
+        order.status = OrderStatus.QUEUED
+        order.last_error = None
     db.flush()
     return job
+
+
+def _generation_order(db: Session, job: Job) -> Order | None:
+    """The locked order of a ``generate_report`` job (``None`` for other kinds)."""
+    if job.kind != GENERATE_REPORT:
+        return None
+    order_id = parse_order_id(str((job.payload or {}).get("order_id")))
+    if order_id is None:
+        return None
+    return db.scalar(
+        select(Order).where(Order.id == order_id).with_for_update().execution_options(populate_existing=True)
+    )
 
 
 def list_jobs(db: Session, *, status: JobStatus, page: int, page_size: int) -> tuple[list[AdminJobOut], int]:

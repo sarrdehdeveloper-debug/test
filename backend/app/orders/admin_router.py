@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Path, Query, Request
 from sqlalchemy.orm import Session
 
 from app import audit
@@ -32,6 +32,7 @@ DbSession = Annotated[Session, Depends(get_db)]
 Manager = Annotated[AdminUser, Depends(require_manager)]
 Page = Annotated[int, Query(ge=1, le=100_000)]
 PageSize = Annotated[int, Query(ge=1, le=ADMIN_PAGE_SIZE_MAX)]
+JobId = Annotated[int, Path(ge=1, le=2**63 - 1)]  # BIGINT range
 
 
 @router.get("/orders", response_model=AdminOrderList)
@@ -115,7 +116,7 @@ def list_jobs(
 
 
 @router.post("/jobs/{job_id}/retry", response_model=AdminJobOut)
-def retry_job(job_id: int, request: Request, admin: Manager, db: DbSession) -> AdminJobOut:
+def retry_job(job_id: JobId, request: Request, admin: Manager, db: DbSession) -> AdminJobOut:
     job = admin_service.retry_job(db, job_id)
     audit.record(db, admin, "job.retry", "job", job.id, {"kind": job.kind}, ip=client_ip(request))
     db.commit()

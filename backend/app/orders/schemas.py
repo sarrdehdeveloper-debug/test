@@ -85,7 +85,7 @@ class OrderCreate(_DiscountCodeIn):
     display_name: Annotated[str | None, Field(max_length=MAX_RAW_DISPLAY_NAME_LENGTH)] = None
     birth_date: date
     birth_time: time
-    city_id: Annotated[StrictInt, Field(gt=0)]
+    city_id: Annotated[StrictInt, Field(gt=0, lt=2**63)]  # cities.id is a BIGINT (GeoNames id)
     time_fold: Literal[0, 1] | None = None
     # Consent must be an explicit JSON boolean, never coerced from "yes"/1.
     marketing_opt_in: StrictBool = False

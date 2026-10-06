@@ -702,7 +702,14 @@ def test_confirm_payment_currency_is_case_insensitive(db, create_order):
     assert len(jobs(db)) == 1
 
 
-def test_concurrent_confirmations_queue_one_job(create_order, db):
+@pytest.mark.parametrize(
+    ("same_event", "expected"),
+    [
+        (False, ["duplicate", "duplicate", "duplicate", "paid"]),  # e.g. completed + async_succeeded
+        (True, ["duplicate_event", "duplicate_event", "duplicate_event", "paid"]),  # redelivery of one event
+    ],
+)
+def test_concurrent_confirmations_queue_one_job(create_order, db, same_event, expected):
     created = create_order()
     order_id = uuid.UUID(created["order_id"])
     outcomes: list[str] = []
@@ -716,7 +723,7 @@ def test_concurrent_confirmations_queue_one_job(create_order, db):
                 session,
                 "fake",
                 PaymentEventData(
-                    event_id=f"evt_{n}",
+                    event_id="evt_same" if same_event else f"evt_{n}",
                     type="payment_succeeded",
                     raw_type="test",
                     order_id=order_id,
@@ -736,8 +743,9 @@ def test_concurrent_confirmations_queue_one_job(create_order, db):
     for thread in threads:
         thread.join()
 
-    assert sorted(outcomes) == ["duplicate", "duplicate", "duplicate", "paid"]
+    assert sorted(outcomes) == expected
     assert len(jobs(db)) == 1
+    assert len(events(db)) == (1 if same_event else 4)
 
 
 def test_get_provider():

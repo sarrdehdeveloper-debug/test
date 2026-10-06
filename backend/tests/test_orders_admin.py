@@ -750,6 +750,8 @@ def test_only_failed_jobs_can_be_retried(manager, add_job, status):
 def test_retry_unknown_job(manager):
     assert manager.post(f"{ADMIN}/jobs/999999/retry").status_code == 404
     assert manager.post(f"{ADMIN}/jobs/abc/retry").status_code == 422
+    assert manager.post(f"{ADMIN}/jobs/0/retry").status_code == 422
+    assert manager.post(f"{ADMIN}/jobs/{2**63}/retry").status_code == 422
 
 
 def test_end_to_end_free_order_appears_in_admin(manager, client, db, sample_geo):

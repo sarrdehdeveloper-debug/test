@@ -22,7 +22,11 @@ export type { ContentKey } from "./content-keys";
  */
 export const getSiteContent = cache(async (locale: string): Promise<SiteContentAccessor> => {
   const [data, messages] = await Promise.all([
-    apiGet<SiteContent>("/site-content", { locale, revalidate: 60, tags: [CACHE_TAGS.siteContent] }),
+    apiGet<SiteContent>("/site-content", {
+      locale,
+      revalidate: 60,
+      tags: [CACHE_TAGS.siteContent],
+    }),
     getMessages({ locale: isAppLocale(locale) ? locale : routing.defaultLocale }),
   ]);
   return createContentAccessor(locale, data, messages.content);

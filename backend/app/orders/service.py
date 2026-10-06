@@ -18,7 +18,7 @@ from app.astro.timezones import AmbiguousLocalTime, NonexistentLocalTime
 from app.charts.schemas import Chart, DayBoundary, YearBoundary
 from app.charts.service import BirthDateOutOfRange, Place, build_chart
 from app.config import get_settings
-from app.errors import ApiError
+from app.errors import ApiError, not_found
 from app.generation.service import SECTIONS_TOTAL, count_done_sections
 from app.geo.schemas import CityOut
 from app.geo.service import get_city_out
@@ -104,7 +104,7 @@ def create_order(db: Session, payload: OrderCreate, ip: str) -> OrderCreated:
     locale = normalize_locale(payload.locale)
     city = get_city_out(db, payload.city_id, locale)
     if city is None:
-        raise ApiError(404, "not_found", "city not found")
+        raise not_found("city")
     price = pricing.quote(db, payload.discount_code, utcnow())
     chart = compute_chart(db, payload, city)
 
@@ -335,16 +335,16 @@ def chart_signs(chart: Mapping[str, Any] | None) -> OrderSigns:
     """Signs read straight from the stored chart JSON: works for purged charts (``input`` removed)
     and never fails on a partial chart."""
     return OrderSigns(
-        sun=_nested_str(chart, "western", "sun", "sign"),
-        moon=_nested_str(chart, "western", "moon", "sign"),
-        ascendant=_nested_str(chart, "western", "ascendant", "sign"),
-        year_animal=_nested_str(chart, "chinese", "year", "animal"),
-        month_animal=_nested_str(chart, "chinese", "month", "animal"),
-        day_animal=_nested_str(chart, "chinese", "day", "animal"),
+        sun=nested_str(chart, "western", "sun", "sign"),
+        moon=nested_str(chart, "western", "moon", "sign"),
+        ascendant=nested_str(chart, "western", "ascendant", "sign"),
+        year_animal=nested_str(chart, "chinese", "year", "animal"),
+        month_animal=nested_str(chart, "chinese", "month", "animal"),
+        day_animal=nested_str(chart, "chinese", "day", "animal"),
     )
 
 
-def _nested_str(data: Any, *path: str) -> str | None:
+def nested_str(data: Any, *path: str) -> str | None:
     for key in path:
         if not isinstance(data, Mapping):
             return None

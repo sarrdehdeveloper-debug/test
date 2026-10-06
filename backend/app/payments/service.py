@@ -199,6 +199,10 @@ def process_event(db: Session, provider: str, event: PaymentEventData) -> str:
     caller's transaction, so an error rolls both back and the provider's retry is processed normally.
     """
     order_id = _resolve_order_id(db, event)
+    if order_id is not None:
+        # Lock the order before inserting the event row: the row's foreign key takes a KEY SHARE lock
+        # on the order, and two concurrent deliveries would deadlock upgrading it to FOR UPDATE.
+        _lock_order(db, order_id)
     row_id = db.execute(
         insert(PaymentEvent)
         .values(

@@ -218,13 +218,14 @@ export interface OrderCreated {
   status: OrderStatus;
 }
 
+/** Each sign is null when the order's chart is not available (backend app/orders/schemas.py). */
 export interface OrderSigns {
-  sun: WesternSign;
-  moon: WesternSign;
-  ascendant: WesternSign;
-  year_animal: ChineseAnimal;
-  month_animal: ChineseAnimal;
-  day_animal: ChineseAnimal;
+  sun: WesternSign | null;
+  moon: WesternSign | null;
+  ascendant: WesternSign | null;
+  year_animal: ChineseAnimal | null;
+  month_animal: ChineseAnimal | null;
+  day_animal: ChineseAnimal | null;
 }
 
 export interface OrderStatusOut {
@@ -240,7 +241,7 @@ export interface OrderStatusOut {
   access_expires_at: string | null;
   download_available: boolean;
   progress: { sections_done: number; sections_total: number };
-  signs: OrderSigns | null;
+  signs: OrderSigns;
 }
 
 export interface CheckoutOut {

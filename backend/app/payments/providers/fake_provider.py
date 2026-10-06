@@ -7,14 +7,18 @@ from collections.abc import Mapping
 
 from app.config import get_settings
 from app.models import Order
-from app.payments.providers.base import CheckoutSession, InvalidWebhook, PaymentEventData
+from app.payments.providers.base import CheckoutSession, InvalidWebhook, PaymentEventData, PaymentProviderError
 
 
 class FakeProvider:
     name = "fake"
 
     def create_checkout(self, order: Order, success_url: str, cancel_url: str) -> CheckoutSession:  # noqa: ARG002
-        site_url = get_settings().site_url.rstrip("/")
+        settings = get_settings()
+        if settings.is_production:
+            # The fake checkout page cannot complete in production: never sell an unpayable order.
+            raise PaymentProviderError("The fake payment provider is disabled in production", configuration=True)
+        site_url = settings.site_url.rstrip("/")
         return CheckoutSession(
             id=f"fake_cs_{uuid.uuid4().hex}",
             url=f"{site_url}/{order.locale}/checkout/fake?order={order.id}",

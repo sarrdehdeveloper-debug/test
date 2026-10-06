@@ -478,6 +478,7 @@ def test_unknown_city_is_404(client, db, sample_geo):
         ("email", "not-an-email"),
         ("email", "a" * 250 + "@example.com"),
         ("city_id", 0),
+        ("city_id", 2**63),
         ("city_id", "360630"),
         ("city_id", None),
         ("time_fold", 2),
@@ -605,6 +606,16 @@ def test_unconfigured_stripe_is_503(client, db, sample_geo, monkeypatch):
     settings = get_settings()
     monkeypatch.setattr(settings, "payment_provider", "stripe")
     monkeypatch.setattr(settings, "stripe_secret_key", "")
+
+    response = client.post(ORDERS, json=order_body())
+
+    assert response.status_code == 503
+    assert error(response)["code"] == "payment_unavailable"
+    assert count(db, Order) == 0
+
+
+def test_fake_provider_refuses_orders_in_production(client, db, sample_geo, monkeypatch):
+    monkeypatch.setattr(get_settings(), "env", "production")
 
     response = client.post(ORDERS, json=order_body())
 
