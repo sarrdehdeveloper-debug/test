@@ -253,7 +253,11 @@ export function Combobox<T>({
             const next = event.target.value;
             setInputValue(next);
             setOpen(true);
-            if (value !== null) onChange(null);
+            if (value !== null) {
+              // Mark the deselection as ours, so the value sync above keeps the typed text.
+              setSyncedKey(null);
+              onChange(null);
+            }
             scheduleLoad(next);
           }}
           onClick={() => {

@@ -1,1 +1,268 @@
-{}
+{
+  "flows": {
+    "contact": "Need help? Write to us at <link>{email}</link>.",
+    "contactPage": "Need help? <link>Contact us</link>.",
+    "rateLimitedWait": "Too many attempts. Please try again in {minutes, plural, one {# minute} other {# minutes}}.",
+    "storageBlocked": "Your browser is blocking site storage, so this page can't remember your order. You'll still receive your report link by email.",
+    "orderRef": "Order {ref}",
+    "emailMismatch": "The two email addresses don't match.",
+    "download": {
+      "button": "Download your report",
+      "again": "Download again",
+      "preparing": "Preparing your PDF…",
+      "started": "Your download has started. Look for “ZodiacBlend-Report.pdf” in your downloads.",
+      "failed": "The download didn't start. Please check your connection and try again.",
+      "rateLimited": "Too many downloads in a short time. Please wait a minute and try again.",
+      "fileInfo": "PDF · six chapters"
+    },
+    "signs": {
+      "title": "Your chart at a glance",
+      "western": "Western",
+      "chinese": "Chinese"
+    }
+  },
+  "free": {
+    "metaDescription": "Discover your Western sun sign and your Chinese zodiac animal in seconds — free, with a reading for each.",
+    "eyebrow": "Free reading",
+    "highlights": {
+      "instant": "Instant result",
+      "noAccount": "No account needed",
+      "traditions": "Western + Chinese"
+    },
+    "form": {
+      "title": "When were you born?",
+      "lead": "Your birth date is all we need to find your sun sign and your Chinese year animal.",
+      "emailHint": "Saved with your reading. We'll only email you news if you tick the box below.",
+      "languageHint": "Your readings will be written in this language.",
+      "submit": "Reveal my blend",
+      "submitting": "Reading the stars…",
+      "privacy": "Your birth date is used only to find your signs. Read our <privacy>Privacy Policy</privacy>."
+    },
+    "result": {
+      "eyebrow": "Your blend",
+      "title": "Two traditions, one portrait",
+      "lead": "The sign the Sun was crossing on the day you were born, and the animal that guards your Chinese year.",
+      "westernLabel": "Western sun sign",
+      "chineseLabel": "Chinese year animal",
+      "elementPolarity": "{polarity} · {element}",
+      "signDetail": "{modality} · {element}",
+      "signElements": {
+        "fire": "Fire",
+        "earth": "Earth",
+        "air": "Air",
+        "water": "Water"
+      },
+      "signModalities": {
+        "cardinal": "Cardinal",
+        "fixed": "Fixed",
+        "mutable": "Mutable"
+      },
+      "announce": "Your reading is ready: {sign} and the {animal}.",
+      "cuspTitle": "Born on a cusp",
+      "sunCusp": "The Sun changed sign on your birthday, so you may be {sign} or {alternative}.",
+      "boundaryTitle": "Born on a boundary day",
+      "yearCusp": "The Chinese year changed on your birthday, so your animal may be the {animal} or the {alternative}.",
+      "exactTime": "Your exact birth time decides — the full report calculates it precisely.",
+      "readingsTitle": "Your readings",
+      "missingReading": "This reading isn't available right now. Please try again later.",
+      "ctaEyebrow": "The full picture",
+      "ctaTitle": "Your blend, in six chapters",
+      "ctaBody": "Add your birth time and place and we calculate your Moon, Ascendant and all four Chinese pillars, then write a personal six-part report you can download as a PDF.",
+      "ctaButton": "Get my full report",
+      "startAgain": "Start again"
+    }
+  },
+  "reading": {
+    "metaDescription": "Your personal six-chapter report from the exact moment and place of your birth: Sun, Moon, Ascendant and the four Chinese pillars.",
+    "eyebrow": "Full report",
+    "includesTitle": "What's included",
+    "deliveryNote": "Ready in minutes · download as PDF",
+    "reportLanguage": "Your report will be written in {language}. To change the language, use the language switch at the top of the page.",
+    "formTitle": "Your birth details",
+    "formLead": "The more precise your details, the more personal your report.",
+    "sections": {
+      "you": "About you",
+      "birth": "Your birth moment",
+      "place": "Where you were born",
+      "checkout": "Review and pay"
+    },
+    "fields": {
+      "firstName": "First name",
+      "firstNamePlaceholder": "e.g. Layla",
+      "firstNameHint": "Used only to personalise your report.",
+      "emailHint": "Your report link will be sent to this address.",
+      "emailConfirm": "Confirm email address",
+      "birthTimeHint": "Please be as exact as you can (your birth certificate is best). Your Ascendant and your Chinese hour animal change about every two hours, so a few minutes can change your chart.",
+      "countryLoading": "Loading countries…",
+      "countryError": "We couldn't load the list of countries.",
+      "cityPlaceholderDisabled": "Choose a country first",
+      "cityCapitalHint": "We've preselected the capital — choose your city if you were born elsewhere.",
+      "cityTimezone": "Time zone: {zone}",
+      "retry": "Retry"
+    },
+    "discount": {
+      "toggle": "Have a discount code?",
+      "checking": "Checking your code…",
+      "applied": "Code {code} applied — you save {amount}.",
+      "fromLink": "Offer code {code} from your link.",
+      "removed": "Discount code removed."
+    },
+    "summary": {
+      "title": "Your order",
+      "item": "Full blended report",
+      "price": "Price",
+      "discount": "Discount ({code})",
+      "total": "Total",
+      "oneTime": "One-time payment, no subscription"
+    },
+    "submit": "Continue to payment",
+    "submitFree": "Get my report",
+    "submitting": "Preparing your order…",
+    "redirecting": "Taking you to secure checkout…",
+    "secureNote": "You'll complete the payment on a secure page. Your report starts as soon as it's confirmed.",
+    "freeNote": "No payment needed with your code — your report starts as soon as you confirm.",
+    "errorSummary": "Please check the highlighted fields.",
+    "timeChoice": {
+      "title": "Which {time} do you mean?",
+      "body": "On your birth date the clocks went back at your birthplace, so {time} happened twice. Please choose the one on your birth certificate.",
+      "first": "The first {time} — before the clocks went back",
+      "second": "The second {time} — after the clocks went back",
+      "confirm": "Use this time and continue",
+      "required": "Please choose one of the two times."
+    },
+    "gap": {
+      "title": "{time} didn't exist on that date",
+      "body": "The clocks went forward at your birthplace that day, so the time jumped over {time}. Please check your birth time.",
+      "suggestion": "Times in the gap are usually recorded as {suggested}.",
+      "use": "Use {suggested}"
+    },
+    "errors": {
+      "invalidPlace": "We can't calculate a chart for this place. Please choose another city nearby.",
+      "payment": "The payment service isn't responding right now. Please try again in a moment."
+    }
+  },
+  "checkout": {
+    "metaTitle": "Test checkout",
+    "eyebrow": "Checkout",
+    "title": "Complete your order",
+    "banner": "TEST MODE — no real payment",
+    "bannerBody": "This page simulates the payment step for development and testing. No card is needed and nothing is charged.",
+    "summaryTitle": "Order summary",
+    "item": "Full blended report",
+    "reportFor": "Report sent to",
+    "total": "Total",
+    "pay": "Pay {amount} (test)",
+    "paying": "Confirming test payment…",
+    "cancel": "Cancel",
+    "unavailableTitle": "Test checkout unavailable",
+    "unavailableBody": "This test payment page is only used in development. Please open your order to complete the payment securely.",
+    "missingOrder": "This checkout link is incomplete. Please start again from the order form.",
+    "noTokenTitle": "We can't find this order here",
+    "noTokenBody": "This order was placed in another browser, or your browser's storage was cleared. Please start a new order from this browser.",
+    "notPayable": "This order doesn't need payment any more.",
+    "viewOrder": "View your order",
+    "newOrder": "Start a new order"
+  },
+  "order": {
+    "metaTitle": "Your order",
+    "eyebrow": "Your report",
+    "loading": "Loading your order…",
+    "retrying": "We couldn't reach our servers. Retrying…",
+    "updating": "Status updates automatically.",
+    "noToken": {
+      "title": "Open your report from your email",
+      "body": "For your privacy, order details can only be shown in the browser where the order was placed. When your report is ready we email you a personal download link that works on any device."
+    },
+    "notFound": {
+      "title": "Order not found",
+      "body": "We couldn't find this order. Please check the link, or use the link in the email we sent you."
+    },
+    "awaiting": {
+      "title": "Complete your payment",
+      "body": "Your order is reserved. Complete the payment and we'll start your report right away.",
+      "button": "Complete payment",
+      "cancelled": "Payment cancelled — you have not been charged. You can complete it whenever you're ready.",
+      "confirmingTitle": "Confirming your payment",
+      "confirmingBody": "This usually takes a few seconds. Please keep this page open.",
+      "notPayable": "This order can no longer be paid. Please refresh the page."
+    },
+    "progress": {
+      "title": "Your report is being created",
+      "lead": "You can stay on this page or come back later — we'll also email you the link as soon as it's ready.",
+      "stepsTitle": "Progress",
+      "steps": {
+        "payment": "Payment confirmed",
+        "chart": "Calculating your chart",
+        "writing": "Writing your six chapters",
+        "design": "Designing your PDF",
+        "ready": "Ready to download"
+      },
+      "chapters": "{done} of {total} chapters",
+      "percent": "{percent}% complete",
+      "announce": {
+        "paid": "Payment confirmed.",
+        "queued": "Your report is in the queue.",
+        "writing": "Writing chapter {current} of {total}.",
+        "design": "All chapters written. Designing your PDF.",
+        "ready": "Your report is ready to download."
+      },
+      "slow": "This is taking a little longer than usual. You can safely close this page — we'll email you when your report is ready."
+    },
+    "ready": {
+      "title": "Your report is ready",
+      "lead": "Your personal <brand>Zodiac Blend</brand> report has been written and designed. Download it now and keep it safe.",
+      "activeFor": "Link active for {hours}h {minutes}m",
+      "activeForHours": "Link active for {hours}h",
+      "activeForMinutes": "Link active for {minutes}m",
+      "until": "Available until {date}",
+      "emailed": "We've also emailed the link to {email}.",
+      "keepCopy": "For your privacy the file is deleted after {hours} hours. Please save your copy."
+    },
+    "failed": {
+      "title": "Your report needs a little more time",
+      "body": "Something went wrong while preparing your report. Don't worry — your payment is safe, our team has been notified, and we'll email you as soon as your report is ready."
+    },
+    "expired": {
+      "title": "This download has expired",
+      "body": "For your privacy, each report can be downloaded for {hours} hours after it's ready, then the file is deleted."
+    },
+    "refunded": {
+      "title": "This order was refunded",
+      "body": "The payment for this order was refunded, so the report is no longer available."
+    },
+    "abandoned": {
+      "title": "This order was not completed",
+      "body": "The payment was never completed, so this order has been closed. You're welcome to start a new one at any time."
+    },
+    "newOrder": "Start a new report",
+    "placedOn": "Ordered on {date}",
+    "paid": "Paid {amount}",
+    "amountDue": "Amount due: {amount}"
+  },
+  "report": {
+    "metaTitle": "Your report",
+    "eyebrow": "Your report",
+    "title": "Your <brand>Zodiac Blend</brand> report",
+    "lead": "Your personal report is ready. Download the PDF and keep it somewhere safe.",
+    "privacyNote": "This link is personal: anyone who has it can download your report, so please don't share it.",
+    "checking": "Checking your link…",
+    "missing": {
+      "title": "This link is incomplete",
+      "body": "The download link seems to be cut off. Please open it again from your email, or copy the whole link into your browser."
+    },
+    "invalid": {
+      "title": "This link isn't valid",
+      "body": "We couldn't find a report for this link. Please use the most recent email we sent you — a newer email replaces earlier links."
+    },
+    "notReady": {
+      "title": "Your report isn't ready yet",
+      "body": "We're still preparing it. Please try this link again in a few minutes.",
+      "orderLink": "View order status"
+    },
+    "expired": {
+      "title": "This link has expired",
+      "body": "For your privacy, each report can be downloaded for {hours} hours after it's ready; after that the file is deleted from our servers."
+    },
+    "newReport": "Start a new report"
+  }
+}

@@ -1,16 +1,17 @@
 import type { MetadataRoute } from "next";
-import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  // Private, token-protected pages are never indexed.
-  const privatePaths = routing.locales.flatMap((l) => [
-    `/${l}/order/`,
-    `/${l}/report/`,
-    `/${l}/checkout/`,
-  ]);
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/api/", "/admin", ...privatePaths] }],
+    rules: [
+      {
+        userAgent: "*",
+        // Uploaded images (blog covers, offers, books) stay crawlable: the longest match wins.
+        allow: ["/", "/api/v1/media/"],
+        // API, dashboard and the private, token-protected pages of every locale.
+        disallow: ["/api/", "/admin", "/*/order/", "/*/report/", "/*/checkout/"],
+      },
+    ],
     sitemap: `${siteUrl()}/sitemap.xml`,
   };
 }

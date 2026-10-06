@@ -1,1 +1,107 @@
-{}
+{
+  "pagesShared": {
+    "breadcrumb": "Breadcrumb",
+    "home": "Home",
+    "unavailableTitle": "Temporarily unavailable",
+    "unavailableBody": "We couldn't load this content just now. Please try again in a moment.",
+    "retry": "Try again",
+    "copyFailed": "Couldn't copy automatically. Please select the text and copy it.",
+    "backToTop": "Back to top",
+    "ctaEyebrow": "Begin your journey",
+    "ctaTitle": "See what your own chart says",
+    "ctaBody": "Discover your sun sign and Chinese animal in seconds, or go deeper with a full report written from the exact moment and place of your birth."
+  },
+  "offersPage": {
+    "eyebrow": "Special offers",
+    "listLabel": "Current offers",
+    "validity": {
+      "open": "No end date",
+      "from": "Valid from {date}",
+      "until": "Valid until {date}",
+      "between": "Valid {range}"
+    },
+    "endsSoon": "Ending soon",
+    "codeLabel": "Your code",
+    "applyCode": "Apply to my report",
+    "details": "Offer details",
+    "detailsFor": "Offer details: {title}",
+    "allOffers": "All offers",
+    "redeemTitle": "Redeem this offer",
+    "redeemWithCode": "Copy the code below, or apply it straight away: it will be filled in when you order your full report.",
+    "redeemWithoutCode": "Follow the link below to take advantage of this offer.",
+    "emptyTitle": "No offers at the moment",
+    "emptyBody": "There are no special offers running right now. New offers appear here first, and you can always start with a free reading."
+  },
+  "blogPage": {
+    "eyebrow": "The journal",
+    "featured": "Latest article",
+    "moreArticles": "More articles",
+    "allArticles": "Articles",
+    "pageOf": "Page {page} of {total}",
+    "metaTitlePage": "{title} (page {page})",
+    "readingTime": "{minutes, plural, one {{count} min read} other {{count} min read}}",
+    "by": "By {author}",
+    "share": "Share this article",
+    "shareOn": "Share on {network}",
+    "shareByEmail": "Share by email",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "nativeShare": "Share",
+    "alsoIn": "Also available in",
+    "notInLocale": "This article isn't available in English yet, so it is shown in its original language.",
+    "related": "More from the journal",
+    "backToJournal": "Back to the journal",
+    "emptyTitle": "The journal is still being written",
+    "emptyBody": "Our first articles are on their way. In the meantime, discover your signs with a free reading.",
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "page": "Page {page}"
+    },
+    "networks": {
+      "x": "X",
+      "facebook": "Facebook",
+      "whatsapp": "WhatsApp",
+      "linkedin": "LinkedIn",
+      "email": "Email"
+    }
+  },
+  "libraryPage": {
+    "eyebrow": "Book series",
+    "seriesLabel": "Series",
+    "bookCount": "{count, plural, one {{n} book} other {{n} books}}",
+    "viewSeries": "Explore the series",
+    "buy": "Buy the book",
+    "comingSoon": "Coming soon",
+    "booksTitle": "Books in this series",
+    "noBooks": "The books of this series will be announced soon.",
+    "allSeries": "Galaxy Library",
+    "emptyTitle": "The library is being prepared",
+    "emptyBody": "The first volumes of the Galaxy Library are on their way. Check back soon, or start your own story with a free reading."
+  },
+  "legalPage": {
+    "eyebrow": "Legal",
+    "privacyLead": "How Zodiac Blend collects, uses and protects your personal information.",
+    "termsLead": "The terms that apply when you use Zodiac Blend and order a report.",
+    "onThisPage": "On this page",
+    "questionsTitle": "Questions about this page?",
+    "questionsBody": "Write to us and we will be happy to help.",
+    "contactCta": "Contact us"
+  },
+  "contactPage": {
+    "eyebrow": "We're here to help",
+    "lead": "Questions about your reading, an order or the Galaxy Library? We would love to hear from you.",
+    "description": "Contact Zodiac Blend: email, phone and postal address.",
+    "detailsTitle": "Get in touch",
+    "writeToUs": "Write to us",
+    "callUs": "Call us",
+    "copyEmail": "Copy email address",
+    "emailCopied": "Email address copied",
+    "policiesTitle": "Good to know",
+    "privacyBody": "What we collect, why, and how long we keep it.",
+    "termsBody": "The rules for readings, reports, payments and refunds."
+  }
+}
