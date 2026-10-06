@@ -17,7 +17,7 @@ from app.utils import normalize_locale
 
 WEBSITE = "zodiacblend.com"
 CONTACT_EMAIL = "info@zodiacblend.com"
-LOGO_PATH = "/brand/logo.png"  # served by the Next.js site (copy of app/reports/assets/logo-email.png)
+LOGO_PATH = "/brand/logo.png"  # served by the Next.js site (frontend/public/brand/logo.png, 512 px for retina)
 
 _LATIN_FONTS = "Georgia, 'Times New Roman', serif"
 _ARABIC_FONTS = "Tahoma, 'Segoe UI', Arial, sans-serif"

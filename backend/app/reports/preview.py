@@ -11,10 +11,9 @@ import uuid
 from pathlib import Path
 
 from app.charts.schemas import CALC_VERSION, Chart, ChartInput, ChineseChart, Pillar, WesternChart, ZodiacPoint
+from app.generation.service import REPORT_SLOTS
 from app.models import Order, OrderStatus, ReportSection, SectionStatus
 from app.security import hash_token, new_token
-
-SECTIONS_TOTAL = 6
 
 _TITLES: dict[str, list[str]] = {
     "en": [
@@ -127,7 +126,7 @@ def sample_sections(order: Order) -> list[ReportSection]:
     """Six completed (transient) sections for ``order``."""
     lang = order.locale if order.locale in _TITLES else "en"
     sections = []
-    for slot in range(1, SECTIONS_TOTAL + 1):
+    for slot in REPORT_SLOTS:
         content = sample_section_content(order.locale, slot)
         sections.append(
             ReportSection(

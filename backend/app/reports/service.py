@@ -7,10 +7,14 @@ import logging
 import uuid
 from datetime import datetime, timedelta
 
+from pydantic import ValidationError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.charts.schemas import Chart
+from app.generation.service import REPORT_SLOTS
 from app.jobs.queue import SEND_REPORT_EMAIL, enqueue
+from app.jobs.registry import PermanentJobError
 from app.models import Order, OrderStatus, Report, ReportSection, SectionStatus
 from app.reports import storage
 from app.reports.pdf import render_report_pdf
@@ -20,8 +24,8 @@ from app.utils import utcnow
 
 logger = logging.getLogger(__name__)
 
-SECTIONS_REQUIRED = 6
-REQUIRED_SLOTS = frozenset(range(1, SECTIONS_REQUIRED + 1))
+REQUIRED_SLOTS = frozenset(REPORT_SLOTS)
+MAX_EXTEND_HOURS = 24 * 30
 # A report can only be (re)built for orders that were paid and not refunded.
 BUILDABLE_STATUSES = frozenset(
     {
@@ -35,8 +39,8 @@ BUILDABLE_STATUSES = frozenset(
 )
 
 
-class ReportBuildError(ValueError):
-    """The order cannot get a report (yet). Not retryable without a change to the order."""
+class ReportBuildError(PermanentJobError, ValueError):
+    """The order cannot get a report (yet): retrying the job without a change to the order won't help."""
 
 
 class ReportFileGone(ValueError):
@@ -56,34 +60,19 @@ def completed_sections(db: Session, order: Order) -> list[ReportSection]:
 def build_report(db: Session, order: Order) -> Report:
     """Render, store and publish the PDF for ``order``; commits.
 
-    Requires the 6 sections to be done. Sets the order ``ready``, starts the access window and
-    enqueues the delivery email (deduplicated per order). Re-running replaces the previous file.
+    Requires the 6 sections to be done (``ReportBuildError``, a permanent job error, otherwise).
+    Sets the order ``ready``, starts the access window and enqueues the delivery email (deduplicated
+    per order). Re-running replaces the previous file. Rendering errors propagate unchanged, so the
+    calling job retries them.
     """
-    if order.status not in BUILDABLE_STATUSES:
-        raise ReportBuildError(f"Order status {order.status.value!r} cannot have a report")
-    sections = completed_sections(db, order)
-    missing = REQUIRED_SLOTS - {s.slot for s in sections}
-    if missing:
-        raise ReportBuildError(f"Report sections not completed: {sorted(missing)}")
+    _ensure_buildable(order)
+    sections = _required_sections(db, order)
 
-    pdf = render_report_pdf(order, [s for s in sections if s.slot in REQUIRED_SLOTS])
+    pdf = render_report_pdf(order, sections)
     file_key = new_report_file_key()
     storage.save_report(file_key, pdf)
-    previous_key: str | None = None
     try:
-        now = utcnow()
-        access_hours = int(get_setting(db, "report_access_hours"))
-        report = db.scalar(select(Report).where(Report.order_id == order.id).with_for_update())
-        if report is None:
-            report = Report(order_id=order.id)
-            db.add(report)
-        elif report.deleted_at is None:
-            previous_key = report.file_key
-        _reset_report(report, file_key=file_key, pdf=pdf, now=now, expires_at=now + timedelta(hours=access_hours))
-        order.status = OrderStatus.READY
-        order.ready_at = now
-        order.last_error = None
-        enqueue(db, SEND_REPORT_EMAIL, {"order_id": str(order.id)}, dedupe_key=f"send_report_email:{order.id}")
+        report, previous_key = _publish(db, order, file_key, pdf)
         db.commit()
     except BaseException:
         db.rollback()
@@ -93,6 +82,47 @@ def build_report(db: Session, order: Order) -> Report:
         _delete_file_quietly(previous_key)
     logger.info("Report ready for order %s (%d bytes)", order.id, report.size_bytes)
     return report
+
+
+def _ensure_buildable(order: Order) -> None:
+    if order.status not in BUILDABLE_STATUSES:
+        raise ReportBuildError(f"Order status {order.status.value!r} cannot have a report")
+    try:
+        Chart.model_validate(order.chart)
+    except ValidationError as exc:
+        raise ReportBuildError("Order chart is invalid") from exc
+
+
+def _required_sections(db: Session, order: Order) -> list[ReportSection]:
+    sections = [s for s in completed_sections(db, order) if s.slot in REQUIRED_SLOTS]
+    missing = REQUIRED_SLOTS - {s.slot for s in sections}
+    if missing:
+        raise ReportBuildError(f"Report sections not completed: {sorted(missing)}")
+    return sections
+
+
+def _publish(db: Session, order: Order, file_key: str, pdf: bytes) -> tuple[Report, str | None]:
+    """Point the order's report row at the new file and mark the order ready (caller commits)."""
+    # Rendering takes seconds: lock the order and re-check, so e.g. a refund processed meanwhile
+    # is not overwritten with "ready".
+    db.refresh(order, with_for_update=True)
+    _ensure_buildable(order)
+
+    now = utcnow()
+    access_hours = int(get_setting(db, "report_access_hours"))
+    report = db.scalar(select(Report).where(Report.order_id == order.id).with_for_update())
+    previous_key: str | None = None
+    if report is None:
+        report = Report(order_id=order.id)
+        db.add(report)
+    elif report.deleted_at is None:
+        previous_key = report.file_key
+    _reset_report(report, file_key=file_key, pdf=pdf, now=now, expires_at=now + timedelta(hours=access_hours))
+    order.status = OrderStatus.READY
+    order.ready_at = now
+    order.last_error = None
+    enqueue(db, SEND_REPORT_EMAIL, {"order_id": str(order.id)}, dedupe_key=f"send_report_email:{order.id}")
+    return report, previous_key
 
 
 def _reset_report(report: Report, *, file_key: str, pdf: bytes, now: datetime, expires_at: datetime) -> None:
@@ -130,9 +160,11 @@ def extend_report_access(db: Session, order: Order, hours: int) -> datetime:
     """Extend the download window by ``hours`` (from now if it already lapsed); caller commits.
 
     Re-opens an order that expired while its file still exists (cleanup not run yet).
+    Raises ``ValueError`` for bad hours, ``ReportFileGone`` / ``ReportBuildError`` when there is
+    nothing downloadable to extend.
     """
-    if not 1 <= hours <= 24 * 30:
-        raise ValueError("hours must be between 1 and 720")
+    if not 1 <= hours <= MAX_EXTEND_HOURS:
+        raise ValueError(f"hours must be between 1 and {MAX_EXTEND_HOURS}")
     report = db.scalar(select(Report).where(Report.order_id == order.id).with_for_update())
     if report is None or report.deleted_at is not None or not storage.report_exists(report.file_key):
         raise ReportFileGone("The report file no longer exists")

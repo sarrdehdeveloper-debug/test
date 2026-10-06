@@ -4,6 +4,11 @@ A browser is launched per render: Playwright's sync API must not be shared acros
 the worker renders from several threads; at this volume the ~1 s start-up cost is irrelevant.
 The page renders fully offline: page JavaScript is disabled, every network request is aborted,
 and all assets (logo, fonts) are inline data URIs.
+
+The running header ("ZODIAC BLEND") and footer (website, "page X / Y") are CSS page-margin boxes
+(``@page { @top-center {...} }`` in report.css) rather than Chromium's ``header_template``: margin
+boxes can be switched off on the full-bleed cover pages, mirrored for Arabic, and they use the
+embedded brand fonts (header templates cannot load the page's web fonts).
 """
 
 from __future__ import annotations
@@ -34,6 +39,14 @@ REPORT_STYLESHEET = "report.css"
 WEBSITE = "zodiacblend.com"
 CONTACT_EMAIL = "info@zodiacblend.com"
 RENDER_TIMEOUT_MS = 60_000
+# Fonts of the running header/footer (report.css @page margin boxes). Chromium only loads a web font
+# once document text uses it, and the Arabic edition uses Cinzel nowhere else: with
+# font-display: block the header would then print invisibly. They are loaded explicitly.
+MARGIN_BOX_FONTS = ('600 10px "Cinzel"', '400 10px "Inter"')
+_LOAD_FONTS_JS = (
+    "fonts => Promise.all(fonts.map(font => document.fonts.load(font)))"
+    ".then(() => document.fonts.ready).then(() => true)"
+)
 
 _ARABIC_CHARS = re.compile(r"[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufdff\ufe70-\ufeff]")
 
@@ -187,7 +200,7 @@ def _print_pdf(browser: Browser, html: str) -> bytes:
         page.route("**/*", _block_external_request)
         page.set_content(html, wait_until="load")
         # Runs in Playwright's isolated world, so it works with page scripts disabled.
-        page.evaluate("document.fonts.ready.then(() => true)")
+        page.evaluate(_LOAD_FONTS_JS, list(MARGIN_BOX_FONTS))
         return page.pdf(format="A4", print_background=True, prefer_css_page_size=True, outline=True, tagged=True)
     finally:
         context.close()

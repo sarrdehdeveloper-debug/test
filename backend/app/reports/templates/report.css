@@ -15,7 +15,9 @@
   --serif: "Cormorant Garamond", "Noto Naskh Arabic", "Amiri", Georgia, "Times New Roman", serif;
   --display: "Cinzel", "Cormorant Garamond", Georgia, serif;
   --sans: "Inter", "Noto Naskh Arabic", "Helvetica Neue", Arial, sans-serif;
-  --ar-text: "Noto Naskh Arabic", "Amiri", "Cormorant Garamond", serif;
+  /* Amiri first: it is a static font, so Chromium embeds real glyphs (Arabic text stays searchable and
+     copyable). The variable Noto Naskh is embedded as Type 3, which breaks Arabic text extraction. */
+  --ar-text: "Amiri", "Noto Naskh Arabic", "Cormorant Garamond", serif;
   --ar-display: "Amiri", "Noto Naskh Arabic", "Cormorant Garamond", serif;
   --han: "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC", "Noto Sans CJK SC", "WenQuanYi Zen Hei",
     "WenQuanYi Micro Hei", "IPAGothic", serif;
@@ -69,6 +71,20 @@
   @bottom-left { content: none; }
 }
 
+/* Arabic edition: the website moves to the mirrored corner. */
+@page chapter-rtl {
+  @bottom-left { content: none; }
+  @bottom-right {
+    content: "zodiacblend.com";
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 6.5pt;
+    letter-spacing: 0.12em;
+    color: #9a8e78;
+    vertical-align: top;
+    padding-top: 8.4mm;
+  }
+}
+
 html {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -98,11 +114,14 @@ p { margin: 0; }
   align-items: center;
   justify-content: center;
   gap: 3mm;
+  /* Symmetric decoration: keep the gradients fading towards the diamond in the Arabic edition too. */
+  direction: ltr;
 }
 .ornament .line {
   display: block;
   width: 34mm;
-  height: 0.6pt;
+  /* Whole device pixel: Chromium snaps box edges, and a sub-pixel height can collapse to nothing. */
+  height: 1px;
   background: linear-gradient(to right, rgba(164, 111, 38, 0), var(--gold-mid));
 }
 .ornament .line:last-child {
@@ -367,7 +386,7 @@ p { margin: 0; }
 .prose blockquote p:last-child { margin-bottom: 0; }
 .prose hr {
   border: 0;
-  height: 0.6pt;
+  height: 1px;
   margin: 6mm auto;
   width: 40%;
   background: linear-gradient(to right, rgba(164, 111, 38, 0), var(--gold-mid), rgba(164, 111, 38, 0));
@@ -436,13 +455,15 @@ p { margin: 0; }
 
 /* ---------- Right-to-left (Arabic) ---------- */
 
-/* Letter-spacing and small caps break Arabic joining; Naskh needs more leading. */
+/* Letter-spacing and small caps break Arabic joining; Naskh needs more leading, and Amiri's small
+   x-height needs a larger size than the Latin serif for the same reading comfort. */
 [dir="rtl"] body {
   font-family: var(--ar-text);
   font-weight: 400;
-  font-size: 12pt;
-  line-height: 1.95;
+  font-size: 14.5pt;
+  line-height: 1.85;
 }
+[dir="rtl"] .chapter { page: chapter-rtl; }
 [dir="rtl"] .cover-title,
 [dir="rtl"] .glance-title,
 [dir="rtl"] .glance-col h3,
@@ -464,10 +485,10 @@ p { margin: 0; }
 [dir="rtl"] .cover-name .name { font-family: var(--ar-display); font-weight: 700; }
 [dir="rtl"] .glance-title { font-size: 14pt; font-weight: 700; }
 [dir="rtl"] .glance-col h3 { font-size: 11pt; font-weight: 700; }
-[dir="rtl"] .glance-label { font-size: 9pt; color: rgba(251, 247, 239, 0.7); }
+[dir="rtl"] .glance-label { font-size: 10.5pt; color: rgba(251, 247, 239, 0.7); }
 [dir="rtl"] .glance-value,
 [dir="rtl"] .glance-desc { font-family: var(--ar-display); font-weight: 700; }
-[dir="rtl"] .glance-notes { font-family: var(--ar-text); font-size: 8pt; letter-spacing: 0; }
+[dir="rtl"] .glance-notes { font-family: var(--ar-text); font-size: 9.5pt; letter-spacing: 0; }
 [dir="rtl"] .cover-date { font-size: 10pt; }
 [dir="rtl"] .chapter-eyebrow { font-size: 11pt; font-weight: 700; }
 [dir="rtl"] .chapter-title { font-family: var(--ar-display); font-weight: 700; font-size: 26pt; line-height: 1.5; }
@@ -475,8 +496,9 @@ p { margin: 0; }
 [dir="rtl"] .prose > p:first-child::first-letter { all: unset; }
 [dir="rtl"] .prose h2,
 [dir="rtl"] .prose h4 { font-family: var(--ar-display); font-weight: 700; font-style: normal; line-height: 1.6; }
-[dir="rtl"] .prose h3 { font-size: 12pt; font-weight: 700; }
-[dir="rtl"] .prose th { font-family: var(--ar-text); font-size: 9pt; letter-spacing: 0; }
+[dir="rtl"] .prose h3 { font-size: 14pt; font-weight: 700; }
+[dir="rtl"] .prose th { font-family: var(--ar-text); font-size: 11pt; letter-spacing: 0; }
 [dir="rtl"] .back-title { font-size: 18pt; font-weight: 700; }
-[dir="rtl"] .back-text { font-size: 12pt; line-height: 1.95; }
+[dir="rtl"] .back-text { font-size: 14pt; line-height: 1.85; }
+[dir="rtl"] .back-text .small { font-size: 12.5pt; }
 [dir="rtl"] .back-contact h3 { font-size: 11pt; font-weight: 700; }

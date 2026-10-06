@@ -23,7 +23,7 @@ BOOK_SLUG_TAKEN = ("slug_taken", "A book with this slug already exists in this s
 # ---------------------------------------------------------------------------
 
 
-def _published_series_stmt() -> Select[tuple[BookSeries]]:
+def _published_series_stmt() -> Select[BookSeries]:
     return (
         select(BookSeries)
         .options(selectinload(BookSeries.books))

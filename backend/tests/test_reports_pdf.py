@@ -13,8 +13,10 @@ from datetime import timedelta
 import pytest
 from sqlalchemy import select
 
+from app.charts.schemas import Chart
 from app.config import get_settings
 from app.jobs.queue import SEND_REPORT_EMAIL
+from app.jobs.registry import PermanentJobError
 from app.models import Job, Order, OrderStatus, Report, ReportSection, SectionStatus
 from app.reports import pdf as pdf_module
 from app.reports import service, storage
@@ -106,9 +108,11 @@ def test_sections_sorted_by_slot_and_fallback_title():
 
 def test_view_works_after_personal_data_purge():
     order = sample_order("en")
-    order.chart = {**order.chart, "input": {}}
+    order.chart = {**order.chart, "input": None}  # what the retention purge leaves behind
+    Chart.model_validate(order.chart)
     view = build_report_view(order, sample_sections(order), utcnow())
     assert view.placements[1].sign == "Pisces"
+    assert view.pillars[3].characters == "癸未"
 
 
 def test_html_escapes_name_and_sanitises_sections():
@@ -155,6 +159,25 @@ def test_render_report_pdf(locale):
     assert 30_000 < len(data) < 5_000_000
     # cover + 6 chapters (each starts a new page) + back cover
     assert _page_count(data) >= 8
+    # The running header is set in Cinzel, which the Arabic edition uses nowhere else: the font is only
+    # embedded if the header was actually printed.
+    assert b"Cinzel-SemiBold" in data
+
+
+def test_arabic_pdf_uses_embedded_arabic_fonts():
+    order = sample_order("ar", display_name="ليلى")
+    data = render_report_pdf(order, sample_sections(order))
+    # Static (non-variable) font: embedded with real glyph names, so Arabic text stays searchable.
+    assert b"Amiri-Regular" in data
+    assert b"Amiri-Bold" in data
+
+
+def test_pdf_has_a_page_per_chapter_even_for_short_sections():
+    order = sample_order("en", display_name=None)
+    sections = sample_sections(order)
+    for section in sections:
+        section.content = "Short."
+    assert _page_count(render_report_pdf(order, sections)) == 8
 
 
 @pytest.fixture
@@ -320,11 +343,31 @@ def test_build_report_rerun_replaces_file(db, fake_renderer):
 
 def test_build_report_requires_all_sections(db, fake_renderer):
     order = _add_order_with_sections(db, "en", slots=range(1, 6))
-    with pytest.raises(ValueError, match="not completed"):
+    with pytest.raises(ValueError, match="not completed") as info:
         service.build_report(db, order)
+    # Not retryable: the worker fails the job instead of re-running it with backoff.
+    assert isinstance(info.value, PermanentJobError)
     assert fake_renderer == []
     assert db.scalar(select(Report)) is None
     assert not get_settings().reports_dir.exists() or not any(get_settings().reports_dir.iterdir())
+
+
+@pytest.mark.parametrize("chart", [{}, {"western": {"sun": "leo"}}, {"input": None}])
+def test_build_report_rejects_invalid_chart_permanently(db, fake_renderer, chart):
+    order = _add_order_with_sections(db, "en")
+    order.chart = chart
+    db.commit()
+    with pytest.raises(PermanentJobError, match="chart"):
+        service.build_report(db, order)
+    assert fake_renderer == []
+
+
+def test_build_report_accepts_purged_chart(db, fake_renderer):
+    order = _add_order_with_sections(db, "en")
+    order.chart = {**order.chart, "input": None}
+    db.commit()
+    service.build_report(db, order)
+    assert db.get(Order, order.id).status == OrderStatus.READY
 
 
 def test_build_report_ignores_failed_sections(db, fake_renderer):
@@ -342,6 +385,42 @@ def test_build_report_refuses_unpaid_or_refunded_orders(db, fake_renderer, statu
     with pytest.raises(service.ReportBuildError):
         service.build_report(db, order)
     assert fake_renderer == []
+
+
+def test_build_report_does_not_resurrect_an_order_refunded_while_rendering(db, monkeypatch):
+    order = _add_order_with_sections(db, "en")
+
+    def _render_while_refund_arrives(order_, sections, **_):
+        # Another transaction (the payment webhook) refunds the order while Chromium is printing.
+        from app.db import SessionLocal
+
+        with SessionLocal() as other:
+            other.get(Order, order_.id).status = OrderStatus.REFUNDED
+            other.commit()
+        return FAKE_PDF
+
+    monkeypatch.setattr(service, "render_report_pdf", _render_while_refund_arrives)
+    with pytest.raises(PermanentJobError):
+        service.build_report(db, order)
+    db.expire_all()
+    assert db.get(Order, order.id).status == OrderStatus.REFUNDED
+    assert db.scalar(select(Report)) is None
+    assert list(get_settings().reports_dir.iterdir()) == []
+    assert db.scalar(select(Job).where(Job.kind == SEND_REPORT_EMAIL)) is None
+
+
+def test_build_report_rendering_errors_stay_retryable(db, monkeypatch):
+    order = _add_order_with_sections(db, "en")
+
+    def _crash(*args, **kwargs):
+        raise pdf_module.PdfRenderError("PDF rendering failed: browser crashed")
+
+    monkeypatch.setattr(service, "render_report_pdf", _crash)
+    with pytest.raises(pdf_module.PdfRenderError) as info:
+        service.build_report(db, order)
+    assert not isinstance(info.value, PermanentJobError)
+    db.expire_all()
+    assert db.get(Order, order.id).status == OrderStatus.GENERATING
 
 
 def test_build_report_removes_file_when_commit_fails(db, fake_renderer, monkeypatch):

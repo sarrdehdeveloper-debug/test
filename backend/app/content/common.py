@@ -16,7 +16,7 @@ from app.utils import default_locale, pick_translation, supported_locales
 T = TypeVar("T")
 
 
-def paginate(db: Session, stmt: Select[tuple[T]], page: int, page_size: int) -> tuple[list[T], int]:
+def paginate(db: Session, stmt: Select[T], page: int, page_size: int) -> tuple[list[T], int]:
     total = db.scalar(select(func.count()).select_from(stmt.order_by(None).subquery())) or 0
     items = list(db.scalars(stmt.limit(page_size).offset((page - 1) * page_size)))
     return items, total
@@ -98,10 +98,10 @@ def check_translations(value: dict[str, BaseModel]) -> dict[str, BaseModel]:
 
 
 def apply_changes(row: object, changes: Mapping[str, Any]) -> list[str]:
-    """Set the given attributes on ``row``; return the names of those whose value changed."""
+    """Set the given attributes on ``row``; return the sorted names of those whose value changed."""
     changed = []
     for name, value in changes.items():
         if getattr(row, name) != value:
             setattr(row, name, value)
             changed.append(name)
-    return changed
+    return sorted(changed)

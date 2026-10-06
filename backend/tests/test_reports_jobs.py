@@ -18,6 +18,7 @@ from typing import ClassVar
 import pytest
 from sqlalchemy import select, text
 
+from app.charts.schemas import Chart
 from app.config import get_settings
 from app.db import Base
 from app.jobs.queue import CLEANUP, SEND_REPORT_EMAIL, claim_next, enqueue
@@ -251,6 +252,41 @@ def test_send_report_email_permanent_errors(db):
     storage.delete_report(report.file_key)
     with pytest.raises(PermanentJobError):
         jobs.handle_send_report_email(db, _email_job(db, order))
+
+
+def test_undeliverable_address_fails_permanently(db):
+    order, _ = _ready_order(db, "en")
+    order.email = "broken@example.com\r\nBcc: victim@example.com"
+    db.commit()
+    with pytest.raises(PermanentJobError):
+        jobs.handle_send_report_email(db, _email_job(db, order))
+    assert _outbox() == []
+
+
+def test_send_report_email_through_worker(db):
+    from app.worker import run_once
+
+    order, report = _ready_order(db, "en")
+    enqueue(db, SEND_REPORT_EMAIL, {"order_id": str(order.id)}, dedupe_key=f"send_report_email:{order.id}")
+    db.commit()
+    assert run_once("test-worker") is True
+    db.expire_all()
+    job = db.scalar(select(Job).where(Job.kind == SEND_REPORT_EMAIL))
+    assert job.status == JobStatus.DONE
+    assert db.get(Report, report.id).email_sent_at is not None
+    assert len(_outbox()) == 1
+
+
+def test_permanent_email_errors_are_not_retried_by_worker(db):
+    from app.worker import run_once
+
+    enqueue(db, SEND_REPORT_EMAIL, {"order_id": "00000000-0000-0000-0000-000000000000"})
+    db.commit()
+    assert run_once("test-worker") is True
+    db.expire_all()
+    job = db.scalar(select(Job).where(Job.kind == SEND_REPORT_EMAIL))
+    assert job.status == JobStatus.FAILED
+    assert job.attempts == 1
 
 
 def test_send_failure_is_retryable_and_keeps_report(db, monkeypatch):
@@ -522,9 +558,13 @@ def test_cleanup_purges_personal_data_but_keeps_signs(db):
         "display_name",
     ):
         assert getattr(purged, field) is None, field
-    assert purged.chart["input"] == {}
+    assert purged.chart["input"] is None
     assert purged.chart["western"]["sun"]["sign"] == "leo"
     assert purged.chart["chinese"]["year"]["animal"] == "horse"
+    chart = Chart.model_validate(purged.chart)  # purged charts remain valid for every reader
+    assert chart.input is None
+    assert chart.western.moon.sign == "pisces"
+    assert "Cairo" not in repr(purged.chart)
     assert purged.personal_data_purged_at is not None
     assert purged.email == old.email  # needed for receipts/support
 
@@ -547,6 +587,7 @@ def test_cleanup_deletes_stale_sessions_attempts_and_jobs(db, make_admin):
             AdminSession(user_id=admin.id, token_hash="2" * 64, expires_at=now + timedelta(hours=1)),
             LoginAttempt(email="a@example.com", success=False, created_at=now - timedelta(days=31)),
             LoginAttempt(email="a@example.com", success=False, created_at=now - timedelta(days=1)),
+            LoginAttempt(email="a@example.com", success=True, created_at=now - timedelta(days=29)),
             Job(kind="cleanup", status=JobStatus.DONE, finished_at=now - timedelta(days=31)),
             Job(kind="cleanup", status=JobStatus.FAILED, finished_at=now - timedelta(days=45)),
             Job(kind="cleanup", status=JobStatus.DONE, finished_at=now - timedelta(days=2)),
@@ -559,7 +600,7 @@ def test_cleanup_deletes_stale_sessions_attempts_and_jobs(db, make_admin):
     assert (result.admin_sessions_deleted, result.login_attempts_deleted, result.jobs_deleted) == (1, 1, 2)
     db.expire_all()
     assert [s.token_hash for s in db.scalars(select(AdminSession))] == ["2" * 64]
-    assert len(db.scalars(select(LoginAttempt)).all()) == 1
+    assert len(db.scalars(select(LoginAttempt)).all()) == 2  # kept for at least 24 h (30 days)
     assert sorted(j.status.value for j in db.scalars(select(Job))) == ["done", "pending"]
 
 

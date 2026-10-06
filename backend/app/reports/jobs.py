@@ -28,7 +28,7 @@ from app.models import (
     Report,
 )
 from app.reports import storage
-from app.reports.emailer import send_email
+from app.reports.emailer import InvalidEmailAddress, send_email
 from app.reports.report_email import build_report_email
 from app.reports.schemas import CleanupResult, OrderJobPayload
 from app.security import hash_token, new_token
@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 200
 FINISHED_JOB_RETENTION = timedelta(days=30)
+# Login throttling only looks back 15 minutes; the longer retention keeps a trail for investigating abuse.
 LOGIN_ATTEMPT_RETENTION = timedelta(days=30)
 # Files younger than this may belong to a report that is being written right now.
 ORPHAN_FILE_GRACE = timedelta(hours=1)
@@ -81,7 +82,10 @@ def handle_send_report_email(db: Session, job: Job) -> None:
     db.commit()
 
     content = build_report_email(order, report.expires_at, token, attached=attach)
-    send_email(order.email, content.subject, content.text, content.html, attachments)
+    try:
+        send_email(order.email, content.subject, content.text, content.html, attachments)
+    except InvalidEmailAddress as exc:
+        raise PermanentJobError("Order email address is not deliverable") from exc
 
     report.email_sent_at = utcnow()
     db.commit()
@@ -129,8 +133,13 @@ def expire_reports(db: Session, now: datetime) -> int:
             _delete_report_file(report.file_key)
             report.deleted_at = now
             report.email_token_hash = None
-            if report.order.status == OrderStatus.READY:
-                report.order.status = OrderStatus.EXPIRED
+        # Conditional update (the order rows are not locked): an order refunded meanwhile stays refunded.
+        db.execute(
+            update(Order)
+            .where(Order.id.in_([r.order_id for r in reports]), Order.status == OrderStatus.READY)
+            .values(status=OrderStatus.EXPIRED)
+            .execution_options(synchronize_session=False)
+        )
         db.commit()
         count += len(reports)
 
@@ -182,7 +191,7 @@ def abandon_unpaid_orders(db: Session, now: datetime) -> int:
         )
         updated = db.execute(
             update(Order)
-            .where(Order.id.in_(ids))
+            .where(Order.id.in_(ids), Order.status == OrderStatus.AWAITING_PAYMENT)
             .values(status=OrderStatus.ABANDONED)
             .execution_options(synchronize_session=False)
         ).rowcount
@@ -246,8 +255,9 @@ def _purge_order(order: Order, now: datetime) -> None:
     order.timezone = None
     order.birth_utc = None
     order.display_name = None
+    # The chart input holds the birth instant and place; the derived signs (western/chinese) stay.
     # Reassign (not mutate) so SQLAlchemy sees the JSONB change.
-    order.chart = {**(order.chart or {}), "input": {}}
+    order.chart = {**(order.chart or {}), "input": None}
     order.personal_data_purged_at = now
 
 
