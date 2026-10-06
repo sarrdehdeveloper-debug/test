@@ -1,0 +1,58 @@
+/*
+ * Admin dashboard additions on top of globals.css (imported by src/app/admin/layout.tsx only).
+ * The dashboard UI is English (LTR); Arabic CONTENT fields carry lang="ar" dir="rtl" and switch to
+ * the Arabic fonts here (globals.css only does that when the whole page is Arabic).
+ */
+
+.admin-root [lang="ar"] {
+  --font-sans:
+    "Noto Naskh Arabic Variable", "Inter Variable", ui-sans-serif, system-ui, "Segoe UI", Tahoma,
+    sans-serif;
+  --font-serif: "Amiri", "Noto Naskh Arabic Variable", Georgia, serif;
+  --font-display: "Amiri", "Noto Naskh Arabic Variable", Georgia, serif;
+  --tracking-display: 0;
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+}
+
+.admin-root input[lang="ar"],
+.admin-root textarea[lang="ar"] {
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* Native <dialog> modals: fade + rise in (skipped under prefers-reduced-motion by globals.css). */
+.admin-root dialog[open] {
+  animation: admin-dialog-in 160ms ease-out both;
+}
+.admin-root dialog[open]::backdrop {
+  animation: admin-backdrop-in 160ms ease-out both;
+}
+.admin-root dialog#admin-mobile-nav[open] {
+  animation: admin-drawer-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes admin-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+@keyframes admin-drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes admin-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Toasts and menus: `animate-[admin-rise_0.2s_ease-out_both]`. */
+@keyframes admin-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

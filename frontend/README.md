@@ -243,14 +243,156 @@ Tokens live in `src/app/globals.css` (`@theme`, Tailwind v4 CSS-first; there is 
   header can still pick its address, so production should run behind a reverse proxy, and the API
   must not be reachable directly.
 
-## Admin dashboard (next step)
+## Admin dashboard conventions
 
-Build it under `src/app/admin/` with its **own root layout** (`src/app/admin/layout.tsx` with
-`<html lang="en" dir="ltr">`, importing `../fonts` and `../globals.css`); it is outside the locale
-routing (`src/proxy.ts` skips `/admin`), English only, client-side data via `api` with
-`credentials: "same-origin"`. Every non-GET admin request (including login) must send the header
-`X-ZB-Admin: 1`. After content edits call `revalidateTag(CACHE_TAGS.x, "max")` from a Server
-Action so the public pages refresh at once.
+`/admin` has its **own root layout** (`src/app/admin/layout.tsx`: `<html lang="en" dir="ltr">`,
+fonts, `globals.css` + `admin.css`, `robots: noindex` for every page). It is outside the locale
+routing (`src/proxy.ts` skips `/admin`): **English UI, plain strings, no next-intl**, and no
+`@/i18n/navigation` / `ui/Button` links (use `next/link`, `AdminButtonLink`). Look: ivory page,
+white panels with `stone-*` hairlines, navy sidebar, gold accents; Inter body, Cormorant `h1`.
+
+```
+src/app/admin/layout.tsx            root layout (metadata title template "%s · Zodiac Blend Admin")
+src/app/admin/login/                /admin/login: email + password, then TOTP step (mfa_required)
+src/app/admin/(dashboard)/layout.tsx AdminAuthProvider + AdminShell around every signed-in page
+src/app/admin/(dashboard)/page.tsx  overview (managers: KPIs, recent orders; editors: welcome)
+src/app/admin/(dashboard)/account/  profile, password change, two-factor setup / disable
+src/app/admin/(dashboard)/<route>/  one folder per section (placeholders use <ComingSoon>)
+src/lib/admin/                      api, types, hooks, format, errors, toast, nav, roles, …
+src/components/admin/               shared components (import from "@/components/admin")
+```
+
+**Auth & roles.** `AdminAuthProvider` loads `GET /auth/me` once; `useAdminAuth()` gives
+`{user, status, refresh, setUser, logout, can}` (`can("manager")`, `can("owner")`; owner ⊃ admin ⊃
+editor, "manager" = owner/admin). Any admin request answering **401** redirects to
+`/admin/login?next=<path>` (only same-origin `/admin` paths are honoured, `safeNextPath`). The route
+map with each section's minimum role lives in `src/lib/admin/nav.ts` (`ADMIN_NAV`): the sidebar is
+built from it **and** `AdminShell` shows the "no permission" state for pages above the user's role
+(longest matching prefix), so a new page under an existing section is guarded automatically. Use
+`<RequireRole role="owner" fallback={null}>` for parts of a page; a **403** from the API renders
+`<ErrorState>` as the same "no permission" state.
+
+**Adding a page** (e.g. `/admin/offers`): replace the placeholder `page.tsx` with a Server Component
+that only exports metadata and renders a client view next to it:
+
+```tsx
+// src/app/admin/(dashboard)/offers/page.tsx
+export const metadata: Metadata = { title: "Offers" };
+export default function OffersPage() {
+  return <OffersView />;
+}
+```
+
+```tsx
+// src/app/admin/(dashboard)/offers/OffersView.tsx  ("use client")
+export function OffersView() {
+  const [params, setParams] = useUrlParams(); // filters/page live in the URL
+  const page = parsePage(params.get("page"));
+  const offers = useAdminQuery<AdminPage<OfferAdmin>>("/offers", { query: { page } });
+  const remove = useAdminMutation((id: number) => adminApi.delete<DeleteOut>(`/offers/${id}`), {
+    successMessage: "Offer deleted",
+    onSuccess: () => offers.refetch(),
+  });
+  return (
+    <>
+      <PageHeader
+        title="Offers"
+        actions={
+          <AdminButtonLink href="/admin/offers/new" variant="primary" icon="plus">
+            New offer
+          </AdminButtonLink>
+        }
+      />
+      <Panel
+        padding="none"
+        footer={
+          offers.data && (
+            <Pagination
+              page={page}
+              pageSize={offers.data.page_size}
+              total={offers.data.total}
+              onPageChange={(p) => setParams({ page: p })}
+            />
+          )
+        }
+      >
+        <DataTable
+          caption="Offers"
+          rows={offers.data?.items}
+          loading={offers.loading}
+          stale={offers.isPlaceholder}
+          error={offers.error}
+          onRetry={offers.refetch}
+          getRowId={(o) => o.id}
+          rowHref={(o) => `/admin/offers/${o.id}`}
+          columns={[
+            { id: "slug", header: "Slug", cell: (o) => o.slug },
+            {
+              id: "live",
+              header: "Live",
+              cell: (o) => <StatusBadge kind="live" status={o.is_live} />,
+            },
+          ]}
+        />
+      </Panel>
+    </>
+  );
+}
+```
+
+A brand-new top-level section also needs an entry in `ADMIN_NAV` (label, icon, `access`).
+`AdminShell` wraps pages in `<Suspense>`, so `useSearchParams`/`useUrlParams` need no extra boundary.
+
+**Data (`src/lib/admin/`).**
+
+- `adminApi.get/post/put/patch/delete/upload(path, …)` — paths relative to `/api/v1/admin`
+  (`"/api/v1/public-config"` style full paths also work); same-origin with the session cookie;
+  `X-ZB-Admin: 1` on every non-GET; JSON in/out; 204 → `undefined`; `upload(path, formData, {onProgress})`
+  uses XHR for progress. Failures throw `AdminApiError` (`status, code, message, details, fields`
+  (`{"translations.en.title": msg}` from 422 `details.fields`), `retryAfterSeconds`, `isUnauthorized`,
+  `isForbidden`, `isValidation`, `isConflict`, `isNotFound`). Pass `{redirectOn401: false}` to handle a
+  401 yourself.
+- `useAdminQuery<T>(path | null, {query, enabled, refreshInterval, keepPreviousData})` →
+  `{data, loading (first load), fetching, isPlaceholder, error, refetch(), setData(), updatedAt}`;
+  changing `query` refetches and keeps the previous data (no layout shift).
+- `useAdminMutation(fn, {successMessage, errorMessage, onSuccess, onError})` → `{mutate (never throws),
+mutateAsync, pending, error, fieldErrors, reset}`; toasts success/errors (no toast on 401;
+  `errorMessage: false` or a function returning `null` to show errors inline instead).
+- `adminErrorMessage(err)` / `adminFieldErrors(err)` (English text for every backend code),
+  `toast.success|error|info|warning(title, {description, action})`, `useAdminLocales()` (content
+  locales from public-config), `useDebouncedValue`, `useUrlParams`.
+- `types.ts` mirrors **every** admin request/response (auth, users, audit, orders, jobs, dashboard,
+  prompts, site content, free readings, offers, discounts, library, blog, media, settings).
+- `format.ts`: `formatMoney(cents, cur)`, `formatDateTime`, `formatDate`, `formatTime`,
+  `formatRelative`, `formatBytes`, `humanize`, `shortId`, `isoToLocalInput`/`localInputToIso`,
+  `centsToInput`/`parseMoneyInput`. Dates are shown in the admin's own time zone.
+
+**Components** (`@/components/admin`, all documented with JSDoc): `PageHeader` (title, description,
+actions, breadcrumbs, badge) · `Panel` (white card: title, actions, footer, `padding="none"` for tables)
+· `DataTable` (columns config, skeleton, empty/error states, `rowHref`/`onRowClick`, `hideBelow`) ·
+`Pagination` · `StatusBadge` (`kind="order|job|section|post|prompt|active|live"`) + `Badge` ·
+`Toolbar` / `FilterBar` / `SearchInput` (debounced) / `FilterSelect` · `FormSection` (settings-style
+card with description column and footer) · `Field` + `TextInput`, `TextArea`, `SelectInput`,
+`Switch`, `CheckboxInput` · `TranslationTabs` (one tab per content locale, completeness dot,
+`fieldProps` = `{lang, dir}` to spread on Arabic controls) · `MarkdownEditor` (toolbar, Ctrl/⌘ B/I/K,
+live preview from `POST /markdown/preview`, RTL) · `ImagePicker` (upload with progress / drag & drop,
+media library modal, paste URL, preview) + `MediaLibraryDialog`, `useImageUpload` · `Modal` and
+`ConfirmDialog` (native `<dialog>`; `onConfirm` may return `mutateAsync(…)` — the dialog stays open
+and shows the error if it rejects) · `Toaster` (mounted by the shell and login page) · `EmptyState`,
+`ErrorState`, `ForbiddenState`, `LoadingState`, `Skeleton` · `StatCard` · `KeyValueList` ·
+`CopyButton` · `DateTimeInput` (local ↔ ISO UTC) · `MoneyInput` (cents) · `JsonPreview` · `QrCode` ·
+`AdminButton` / `AdminButtonLink` (`variant="primary|gold|secondary|ghost|danger|dangerGhost"`,
+`size="xs|sm|md"`, `icon`, `iconOnly`, `loading`) · `Icon`.
+
+**Rules.** Arabic content controls get `lang="ar" dir="rtl"` (`fieldProps`; `admin.css` switches to
+Noto Naskh/Amiri) while labels stay English/LTR; use logical utilities (`ms-`, `ps-`, `start-`)
+anyway. Errors inside a modal are shown inline (toasts sit below the modal backdrop). After content
+edits call `revalidateTag(CACHE_TAGS.x, "max")` from a Server Action so the public pages refresh at
+once. Test logins live in the shared dev DB (owner/editor, see the task brief): never change their
+password or MFA; create your own admin (`POST /admin/users`, `example.com` email) for account flows
+and deactivate it afterwards. Note: open the dev server as **`http://localhost:3000`** for browser
+checks — Next blocks its dev resources (HMR) for other hosts such as `127.0.0.1` unless they are in
+`allowedDevOrigins`, and pages opened that way never hydrate.
 
 ## Testing
 
