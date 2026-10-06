@@ -1,8 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import ar from "../../messages/ar.json";
-import en from "../../messages/en.json";
+import { catalogs as merged } from "./catalog";
 import { CONTENT_KEY_NAMES, CONTENT_KEYS } from "@/lib/content-keys";
 import { CHINESE_ANIMALS, ELEMENTS, ORDER_STATUSES, WESTERN_SIGNS } from "@/lib/types";
 import { CLIENT_NAMESPACES } from "./client-messages";
@@ -20,7 +19,7 @@ function flatten(tree: Tree, prefix = ""): Record<string, string> {
   return out;
 }
 
-const catalogs = { en: flatten(en as Tree), ar: flatten(ar as Tree) };
+const catalogs = { en: flatten(merged.en as Tree), ar: flatten(merged.ar as Tree) };
 
 /** ICU argument names ({name}, {count, plural, ...}) and rich-text tags (<terms>). */
 function placeholders(message: string): string[] {
@@ -77,7 +76,7 @@ describe("messages", () => {
   });
 
   it("only sends existing namespaces to the browser", () => {
-    for (const ns of CLIENT_NAMESPACES) expect(Object.keys(en)).toContain(ns);
+    for (const ns of CLIENT_NAMESPACES) expect(Object.keys(merged.en)).toContain(ns);
   });
 
   it("shows the GeoNames attribution in the footer", () => {

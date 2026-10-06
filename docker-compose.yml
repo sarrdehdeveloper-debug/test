@@ -19,7 +19,7 @@ services:
     env_file: ./backend/.env.example
     environment:
       ZB_DATABASE_URL: postgresql+psycopg://zodiac:zodiac@db:5432/zodiac
-    command: sh -c "alembic upgrade head && python -m app.cli import-geo && python -m app.cli seed"
+    command: sh -c "alembic upgrade head && python -m app.cli import-geo --min-population 5000 && python -m app.cli seed"
     depends_on:
       db:
         condition: service_healthy

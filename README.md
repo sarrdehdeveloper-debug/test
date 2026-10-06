@@ -41,7 +41,7 @@ python3.11 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt && python -m playwright install chromium
 cp .env.example .env
 alembic upgrade head
-python -m app.cli import-geo          # countries & cities (GeoNames, CC-BY 4.0)
+python -m app.cli import-geo --min-population 5000   # countries & cities (GeoNames, CC-BY 4.0)
 python -m app.cli seed                # sample content, 6 prompts, readings (en + ar)
 python -m app.cli create-admin --email you@example.com --password 'a-long-password'
 uvicorn app.main:app --reload         # API on :8000
