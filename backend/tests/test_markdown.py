@@ -5,7 +5,9 @@ MEDIA = "/api/v1/media/0123456789abcdef0123456789abcdef.webp"
 
 def test_scripts_and_raw_html_are_neutralised():
     html = render_markdown("**b** <script>alert(1)</script> [x](javascript:alert(1)) <img src=x onerror=alert(1)>")
-    assert "<script" not in html and "onerror=" not in html and "href=\"javascript:" not in html
+    # Raw HTML survives only as escaped text; no live tags or javascript: links.
+    assert "<script" not in html and "<img" not in html and 'href="javascript:' not in html
+    assert "&lt;script&gt;" in html
     assert "<strong>b</strong>" in html
 
 
