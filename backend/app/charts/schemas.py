@@ -122,7 +122,8 @@ class ChartInput(BaseModel):
 
 class Chart(BaseModel):
     calc_version: str = CALC_VERSION
-    input: ChartInput
+    # None after the personal-data retention purge; derived results below are kept.
+    input: ChartInput | None
     western: WesternChart
     chinese: ChineseChart
     # Machine-readable notes, e.g. "sun_on_cusp", "near_solar_term_boundary".

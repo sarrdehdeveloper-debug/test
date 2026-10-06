@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import hmac
 from datetime import UTC, datetime
 from typing import Any
 
@@ -28,8 +29,12 @@ def client_ip(request: Request) -> str:
 
 
 def ip_hash(ip: str) -> str:
-    """Pseudonymised IP for abuse analytics (never store raw IPs for public visitors)."""
-    return hashlib.sha256(f"zb-ip:{ip}".encode()).hexdigest()
+    """Keyed pseudonym of an IP for abuse analytics (raw visitor IPs are never stored).
+
+    HMAC with a server secret: an unkeyed hash of the 2^32 IPv4 space is trivially reversible.
+    """
+    secret = get_settings().ip_hash_secret.encode()
+    return hmac.new(secret, ip.encode(), hashlib.sha256).hexdigest()
 
 
 def supported_locales() -> list[str]:

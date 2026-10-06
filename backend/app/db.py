@@ -21,6 +21,8 @@ engine = create_engine(
     pool_pre_ping=True,
     pool_size=10,
     max_overflow=20,
+    # Keep birth data / emails out of exception messages and logs in production.
+    hide_parameters=_settings.is_production,
 )
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 

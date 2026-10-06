@@ -1,6 +1,7 @@
 """Management commands: ``python -m app.cli <command>``.
 
 create-admin --email E --password P [--role owner|admin|editor] [--name N]
+reset-mfa --email E                   clear an admin's MFA (lost authenticator) and sign them out
 import-geo [--min-population N]       load countries & cities (GeoNames via geonamescache)
 seed [--force]                        load sample content, prompts, readings (idempotent)
 worker                                run the job worker (same as python -m app.worker)
@@ -23,7 +24,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--role", default="owner", choices=["owner", "admin", "editor"])
 
     p = sub.add_parser("import-geo")
-    p.add_argument("--min-population", type=int, default=15000)
+    p.add_argument("--min-population", type=int, default=15000, choices=[500, 1000, 5000, 15000])
+
+    p = sub.add_parser("reset-mfa", help="clear an admin's MFA and sign them out (account recovery)")
+    p.add_argument("--email", required=True)
 
     p = sub.add_parser("seed")
     p.add_argument("--force", action="store_true", help="overwrite existing sample rows")
@@ -52,6 +56,24 @@ def main(argv: list[str] | None = None) -> int:
             user.role = AdminRole(args.role)
             user.is_active = True
         print(f"Admin {email} ready ({args.role})")
+        return 0
+
+    if args.command == "reset-mfa":
+        from sqlalchemy import delete, select
+
+        from app.db import session_scope
+        from app.models import AdminSession, AdminUser
+
+        with session_scope() as db:
+            user = db.scalar(select(AdminUser).where(AdminUser.email == args.email.strip().lower()))
+            if user is None:
+                print("No such admin", file=sys.stderr)
+                return 2
+            user.totp_secret = None
+            user.totp_pending_secret = None
+            user.totp_last_used_step = None
+            db.execute(delete(AdminSession).where(AdminSession.user_id == user.id))
+        print(f"MFA reset for {user.email}; all their sessions were signed out")
         return 0
 
     if args.command == "import-geo":

@@ -11,10 +11,11 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+_DEV_IP_HASH_SECRET = "dev-only-ip-hash-secret"  # noqa: S105 - placeholder, rejected in production
 
 
 class Settings(BaseSettings):
@@ -70,8 +71,11 @@ class Settings(BaseSettings):
     worker_poll_seconds: float = 1.0
     job_lease_seconds: int = 300
 
-    # Trust X-Forwarded-For from the Next.js proxy / load balancer.
+    # Trust X-Forwarded-For from the Next.js proxy / load balancer. Only safe when the API is
+    # reachable exclusively through that proxy (otherwise clients can spoof their IP).
     trust_proxy_headers: bool = True
+    # Secret for pseudonymising visitor IPs (utils.ip_hash). Must be set in production.
+    ip_hash_secret: str = _DEV_IP_HASH_SECRET
 
     @property
     def reports_dir(self) -> Path:
@@ -84,6 +88,15 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.env == "production"
+
+    @model_validator(mode="after")
+    def _check_production_secrets(self) -> Settings:
+        if self.is_production:
+            if self.ip_hash_secret == _DEV_IP_HASH_SECRET or len(self.ip_hash_secret) < 32:
+                raise ValueError("ZB_IP_HASH_SECRET must be set to a random value of 32+ characters in production")
+            if not self.cookie_secure:
+                raise ValueError("ZB_COOKIE_SECURE must be true in production")
+        return self
 
 
 @lru_cache

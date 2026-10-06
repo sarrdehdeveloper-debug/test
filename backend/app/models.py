@@ -72,6 +72,8 @@ class AdminUser(TimestampMixin, Base):
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     totp_secret: Mapped[str | None] = mapped_column(String(64))  # set => MFA required at login
     totp_pending_secret: Mapped[str | None] = mapped_column(String(64))  # during enrollment
+    # Last accepted TOTP time step: a code cannot be replayed, even across API processes.
+    totp_last_used_step: Mapped[int | None] = mapped_column(BigInteger)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
@@ -101,7 +103,10 @@ class LoginAttempt(Base):
     success: Mapped[bool] = mapped_column(Boolean, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    __table_args__ = (Index("ix_login_attempts_email_created", "email", "created_at"),)
+    __table_args__ = (
+        Index("ix_login_attempts_email_created", "email", "created_at"),
+        Index("ix_login_attempts_ip_created", "ip", "created_at"),
+    )
 
 
 class AuditLog(Base):
@@ -370,7 +375,10 @@ class City(Base):
     population: Mapped[int] = mapped_column(BigInteger, nullable=False, default=0)
     is_capital: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-    __table_args__ = (Index("ix_cities_country_ascii", "country_code", "ascii_name"),)
+    __table_args__ = (
+        Index("ix_cities_country_ascii", "country_code", "ascii_name"),
+        Index("ix_cities_capital", "country_code", postgresql_where=text("is_capital")),
+    )
 
 
 # ---------------------------------------------------------------------------

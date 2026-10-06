@@ -46,7 +46,8 @@ _VALIDATORS: dict[str, Any] = {
     "gemini_model": lambda v: isinstance(v, str) and 0 < len(v) <= 100,
     "gemini_temperature": lambda v: isinstance(v, (int, float)) and 0 <= v <= 2,
     "gemini_max_output_tokens": lambda v: isinstance(v, int) and 64 <= v <= 65536,
-    "gemini_timeout_seconds": lambda v: isinstance(v, int) and 5 <= v <= 600,
+    # Must stay well below the worker's job lease (ZB_JOB_LEASE_SECONDS, default 300).
+    "gemini_timeout_seconds": lambda v: isinstance(v, int) and 5 <= v <= 240,
     "prompt_delay_min_seconds": lambda v: isinstance(v, (int, float)) and 0 <= v <= 30,
     "prompt_delay_max_seconds": lambda v: isinstance(v, (int, float)) and 0 <= v <= 30,
     "min_words": lambda v: isinstance(v, int) and 0 <= v <= 5000,
