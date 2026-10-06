@@ -281,3 +281,53 @@ access hours, calculation conventions, retention) are edited in the dashboard (`
 6. Payment provider: Stripe Checkout implemented behind an interface (`fake` provider for testing).
 7. Galaxy Library books link to an external purchase URL until selling/shipping is specified.
 8. Report link: 24 h from when the report is ready; email contains a link (not an attachment).
+
+## 10. As-built notes (details beyond the tables above)
+
+### Chinese calendar (§4.3)
+* The 23:00–23:59 hour is the 子 hour of the **next** day in both settings, so its hour stem comes from
+  the next day's stem. With `day_boundary="midnight"` the day pillar stays on the current day
+  (lunar-python sect 2, 夜子时); with `"zi_23"` the day pillar is already the next day's (sect 1).
+* `year_pillar_for_date` returns an alternative animal when the Lichun instant falls inside
+  `[d 00:00 UTC+14, d+1 00:00 UTC−12)`, or, in `lunar_new_year` mode, when `d` is the Chinese New Year
+  date (China calendar) or the day before it. `lunar_new_year` changes the year at 00:00 Beijing time.
+* Supported years 1800–2200 (`ValueError` outside). Helpers in `app.chinese.solar_terms`:
+  `nearest_jie(instant)`, `lichun_instant(year)`, `chinese_new_year(year)`, `jie_terms(year)`.
+
+### Geography (§5)
+* `admin1` is only populated for US cities (state names); other countries have none in the dataset.
+* `GET /geo/countries` lists countries that have cities. City labels use the localised country name;
+  the Arabic separator is `، `. `app.geo.service.get_city_out(db, city_id, locale)` builds the label.
+* Place data © GeoNames (geonames.org), CC BY 4.0 — attribution is shown in the site footer.
+
+### Admin auth (§6)
+* `POST /auth/login` also requires `X-ZB-Admin: 1` (403 `csrf_failed`); may return 401 `invalid_mfa_code`.
+* `GET /auth/me`, `POST /auth/mfa/enable`, `POST /auth/mfa/disable` → `{"user": AdminUserOut}`;
+  `POST /auth/logout`, `POST /auth/password` → `{"ok": true}`. Account forms return 422
+  `invalid_password` / `invalid_mfa_code` with `details.fields`. MFA state errors: 409
+  `mfa_already_enabled`, `mfa_setup_required`, `mfa_not_enabled`.
+* `AdminUserOut = {id,email,name,role,mfa_enabled,last_login_at}`. Users endpoints return
+  `ManagedUserOut = AdminUserOut + {is_active,created_at,updated_at}` (POST → 201). `PATCH /users/{id}`
+  accepts `reset_mfa: true`. Errors: 409 `email_taken`, 409 `last_owner`, 403 `self_change_forbidden`.
+* `GET /audit-logs` accepts `page_size` (≤100) and `action`; items
+  `{id,created_at,user_id,user_email,action,entity_type,entity_id,data,ip}`.
+* Throttling: 5 failed logins per email or 30 per IP within 15 minutes → 429. TOTP codes cannot be
+  replayed (last accepted step stored on the user). Lost authenticator: `python -m app.cli reset-mfa`.
+* `ZB_TRUST_PROXY_HEADERS` assumes the API is reachable **only** through the Next.js proxy.
+
+### Prompts (§6)
+* Extra endpoints: `GET /prompts/versions/{id}`, `DELETE /prompts/versions/{id}` (drafts only).
+* New-draft body fields are optional (`name, section_titles, template, system_instruction, min_words,
+  notes, base_version_id`); omitted fields are copied from the base / published / latest version.
+* Preview accepts unsaved `template` / `system_instruction`; response adds `locale` and
+  `rendered_system_instruction`. Test response adds `output_html`, `min_words`, `finish_reason`.
+* `GET /prompts/variables` → `{locale, items:[{name, description, example}]}`.
+* Errors: 409 `draft_exists` / `not_draft`, 422 `invalid_template` (`details.field`), 422
+  `template_required`, 422 `invalid_base_version`, 503 `ai_unavailable` / `ai_not_configured`,
+  502 `ai_error`, 429 `rate_limited`. The system instruction is rendered as a template too.
+
+### Generation
+* Re-running a generate job for a `generation_failed` order resumes it: finished sections are kept.
+  Admin "retry generation" resets the existing `generate_report:<order_id>` job row.
+* `gemini_timeout_seconds` (≤ 240) plus the prompt delay must stay below `ZB_JOB_LEASE_SECONDS`
+  (default 300); the lease is extended before every AI call and an advisory lock prevents double runs.
