@@ -19,3 +19,7 @@ frontend/.env*.local
 .DS_Store
 .idea/
 .vscode/
+
+# Cookie jars / scratch credentials
+*.jar
+cookies*.txt
